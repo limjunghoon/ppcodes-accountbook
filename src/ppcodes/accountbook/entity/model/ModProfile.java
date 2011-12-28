@@ -7,14 +7,14 @@ public class ModProfile
 	  
    }
    
-   public ModProfile(Integer _UserId,Integer _InCategoryId,Integer _OutCategoryId,Integer _ProjectId,Integer _BusinessId,Integer _BudgetId,String _CreateTime,String _ModifyTime)
+   public ModProfile(Integer _UserId,Integer _InCategoryId,Integer _OutCategoryId,Integer _ProjectId,Integer _BusinessId,Integer _AccountId,String _CreateTime,String _ModifyTime)
    {
 	  UserId=_UserId;
 	  InCategoryId=_InCategoryId;
 	  OutCategoryId=_OutCategoryId;
 	  ProjectId=_ProjectId;
 	  BusinessId=_BusinessId;
-	  BudgetId=_BudgetId;
+	  AccountId=_AccountId;
 	  CreateTime=_CreateTime;
 	  ModifyTime=_ModifyTime;
    }
@@ -25,20 +25,12 @@ public class ModProfile
    private Integer OutCategoryId;
    private Integer ProjectId;
    private Integer BusinessId;
-   private Integer BudgetId;
+   private Integer AccountId;
    private String CreateTime;
    private String ModifyTime;
    private Integer Disabled;
    
-   public Integer getDisabled()
-   {
-      return Disabled;
-   }
 
-   public void setDisabled(Integer disabled)
-   {
-      Disabled = disabled;
-   }
 
    public Integer getId()
    {
@@ -100,14 +92,14 @@ public class ModProfile
       BusinessId = businessId;
    }
 
-   public Integer getBudgetId()
+   public Integer getAccountId()
    {
-      return BudgetId;
+      return AccountId;
    }
 
-   public void setBudgetId(Integer budgetId)
+   public void setAccountId(Integer accountId)
    {
-      BudgetId = budgetId;
+	  AccountId = accountId;
    }
 
    public String getCreateTime()
@@ -129,4 +121,14 @@ public class ModProfile
    {
       ModifyTime = modifyTime;
    } 
+   
+   public Integer getDisabled()
+   {
+      return Disabled;
+   }
+   
+   public void setDisabled(Integer disabled)
+   {
+      Disabled = disabled;
+   }
 }
