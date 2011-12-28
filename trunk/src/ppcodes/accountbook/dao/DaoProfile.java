@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import ppcodes.accountbook.entity.dictionary.DicBusiness;
 import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.android.common.DBHelper;
 
@@ -139,8 +138,8 @@ public class DaoProfile extends DaoBase
    
    
    /**
-    * 删除一个商家，BusinessName,ModifyTime必须赋值
-    * @param modBusiness
+    * 删除一个配置，UserId,ModifyTime必须赋值
+    * @param modProfile
     */
    public void DeleteProfile(ModProfile modProfile)
    {
