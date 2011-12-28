@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style parent="@android:style/Theme.Light.NoTitleBar" name="LightNoTitleStyle"></style>
+    <style parent="@android:style/Theme.Light" name="LightStyle"></style>
+    <style parent="@android:style/Theme.Black.NoTitleBar" name="BlackNoTitleStyle"></style>
+    <style parent="@android:style/Theme.Black" name="BlackStyle"></style>
+</resources>
