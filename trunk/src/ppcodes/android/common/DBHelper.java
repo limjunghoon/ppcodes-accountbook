@@ -12,14 +12,15 @@ public class DBHelper extends SQLiteOpenHelper
    private final static String DATABASE_NAME = "pp.accountbook.dd";
    private final static int DATABASE_VERSION = 1;
 
-   private final  String CREATE_UserInfo_SQL = "CREATE TABLE [UserInfo] ([Disabled] INTEGER NOT NULL DEFAULT (0), [UserId] INTEGER NOT NULL PRIMARY KEY, [UserName] TEXT NOT NULL,[UserKey] TEXT NOT NULL,[CreateTime] DATETIME,[ModifyTime] DATETIME)";
-   private final  String CREATE_Budget_SQL = "CREATE TABLE [Budget] ([CategoryChildId] INTEGER NOT NULL, [CategoryId] INTEGER NOT NULL, [UserId] INTEGER NOT NULL, [Disabled] INTEGER NOT NULL DEFAULT (0), [BudgetId] INTEGER NOT NULL PRIMARY KEY, [CreateTime] DATETIME, [ModifyTime] DATETIME, [Date] TEXT, [Amount] REAL)";
-   private final  String CREATE_Account_SQL = "CREATE TABLE [Account] ([Disabled] INTEGER NOT NULL DEFAULT (0), [UserId] INTEGER NOT NULL, [AccountId] INTEGER NOT NULL PRIMARY KEY, [AccountName] TEXT NOT NULL, [CreateTime] DATETIME, [ModifyTime] DATETIME, [UseCount] INTEGER DEFAULT (0))";
-   private final  String CREATE_Business_SQL = "CREATE TABLE [Business] ([BusinessId] INTEGER NOT NULL PRIMARY KEY, [UserId] INTEGER NOT NULL, [BusinessName] TEXT NOT NULL, [CreateTime] DATETIME, [ModifyTime] DATETIME, [Disabled] INTEGER NOT NULL DEFAULT (0), [UseCount] INTEGER DEFAULT (0))";
-   private final  String CREATE_Category_SQL = "CREATE TABLE [Category] ([InOrOut] INTEGER NOT NULL, [Disabled] INTEGER NOT NULL DEFAULT (0), [CategoryId] INTEGER NOT NULL PRIMARY KEY, [ParentCategoryId] INTEGER NOT NULL DEFAULT (0), [CatagoryName] TEXT NOT NULL, [UserId] INTEGER NOT NULL, [CreateTime] DATETIME, [ModifyTime] DATETIME, [UseCount] INTEGER DEFAULT (0),[Icon] TEXT)";
-   private final  String CREATE_InOutDetails_SQL = "CREATE TABLE [InOutDetails] ([BusinessId] INTEGER, [ProjectId] INTEGER, [Amount] REAL, [InOrOut] INTEGER NOT NULL, [Remarks] TEXT, [Date] TEXT NOT NULL, [CreateTime] DATETIME, [Disabled] INTEGER NOT NULL DEFAULT (0), [Id] INTEGER NOT NULL PRIMARY KEY,[UserId] INTEGER NOT NULL, [CategoryId] INTEGER, [CategoryChildId] INTEGER)";
-   private final  String CREATE_Project_SQL = "CREATE TABLE [Project] ([ProjectId] INTEGER NOT NULL PRIMARY KEY, [UserId] INTEGER NOT NULL, [ProjectName] TEXT NOT NULL, [CreateTime] DATETIME, [ModifyTime] DATETIME, [Disabled] INTEGER NOT NULL DEFAULT (0), [UseCount] INTEGER DEFAULT (0))";
-
+   private final  String CREATE_UserInfo_SQL = "CREATE TABLE [UserInfo] ([Disabled] INTEGER NOT NULL DEFAULT (0), [UserId] INTEGER NOT NULL PRIMARY KEY, [UserName] TEXT NOT NULL,[UserKey] TEXT NOT NULL,[CreateTime] LONG, [ModifyTime] LONG)";
+   private final  String CREATE_Budget_SQL = "CREATE TABLE [Budget] ([CategoryChildId] INTEGER NOT NULL, [CategoryId] INTEGER NOT NULL, [UserId] INTEGER NOT NULL, [Disabled] INTEGER NOT NULL DEFAULT (0), [BudgetId] INTEGER NOT NULL PRIMARY KEY, [CreateTime] LONG, [ModifyTime] LONG, [Date] TEXT, [Amount] REAL)";
+   private final  String CREATE_Account_SQL = "CREATE TABLE [Account] ([Disabled] INTEGER NOT NULL DEFAULT (0), [UserId] INTEGER NOT NULL, [AccountId] INTEGER NOT NULL PRIMARY KEY, [AccountName] TEXT NOT NULL, [CreateTime] LONG, [ModifyTime] LONG, [UseCount] INTEGER DEFAULT (0))";
+   private final  String CREATE_Business_SQL = "CREATE TABLE [Business] ([BusinessId] INTEGER NOT NULL PRIMARY KEY, [UserId] INTEGER NOT NULL, [BusinessName] TEXT NOT NULL, [CreateTime] LONG, [ModifyTime] LONG, [Disabled] INTEGER NOT NULL DEFAULT (0), [UseCount] INTEGER DEFAULT (0))";
+   private final  String CREATE_Category_SQL = "CREATE TABLE [Category] ([InOrOut] INTEGER NOT NULL, [Disabled] INTEGER NOT NULL DEFAULT (0), [CategoryId] INTEGER NOT NULL PRIMARY KEY, [ParentCategoryId] INTEGER NOT NULL DEFAULT (0), [CatagoryName] TEXT NOT NULL, [UserId] INTEGER NOT NULL, [CreateTime] LONG, [ModifyTime] LONG, [UseCount] INTEGER DEFAULT (0),[Icon] TEXT)";
+   private final  String CREATE_InOutDetails_SQL = "CREATE TABLE [InOutDetails] ([BusinessId] INTEGER, [ProjectId] INTEGER, [Amount] REAL, [InOrOut] INTEGER NOT NULL, [Remarks] TEXT, [Date] TEXT NOT NULL, [CreateTime] LONG, [ModifyTime] LONG, [Disabled] INTEGER NOT NULL DEFAULT (0), [Id] INTEGER NOT NULL PRIMARY KEY,[UserId] INTEGER NOT NULL, [CategoryId] INTEGER, [CategoryChildId] INTEGER)";
+   private final  String CREATE_Project_SQL = "CREATE TABLE [Project] ([ProjectId] INTEGER NOT NULL PRIMARY KEY, [UserId] INTEGER NOT NULL, [ProjectName] TEXT NOT NULL, [CreateTime] LONG, [ModifyTime] LONG, [Disabled] INTEGER NOT NULL DEFAULT (0), [UseCount] INTEGER DEFAULT (0))";
+   private final  String CREATE_Profile_SQL="CREATE TABLE [Profile] ([_id] INTEGER NOT NULL PRIMARY KEY, [UserId] INTEGER NOT NULL, [CreateTime] LONG, [ModifyTime] LONG,  [InCategoryId] INTEGER NOT NULL DEFAULT (1), [OutCategoryId] INTEGER NOT NULL DEFAULT (1), [ProjectId] INTEGER NOT NULL DEFAULT (1), [BusinessId] INTEGER NOT NULL DEFAULT (1), [BudgetId] INTEGER NOT NULL DEFAULT (1), [Disabled] INTEGER NOT NULL DEFAULT (0));";
+   
    private final  String DROP_UserInfo_SQL = "DROP TABLE IF EXISTS UserInfo";
    private final  String DROP_Budget_SQL = "DROP TABLE IF EXISTS Budget";
    private final  String DROP_Account_SQL = "DROP TABLE IF EXISTS Account";
@@ -27,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper
    private final  String DROP_Category_SQL = "DROP TABLE IF EXISTS Category";
    private final  String DROP_InOutDetails_SQL = "DROP TABLE IF EXISTS InOutDetails";
    private final  String DROP_Project_SQL = "DROP TABLE IF EXISTS Project";
+   private final  String DROP_Profile_SQL = "DROP TABLE IF EXISTS Profile";
 
    public DBHelper(Context context)
    {
@@ -195,6 +197,7 @@ public class DBHelper extends SQLiteOpenHelper
 		 db.execSQL(CREATE_Category_SQL);
 		 db.execSQL(CREATE_InOutDetails_SQL);
 		 db.execSQL(CREATE_Project_SQL);
+		 db.execSQL(CREATE_Profile_SQL);
 		 Log.e("ERROR", "数据库创建成功");
 		 db.setTransactionSuccessful();
 		 db.endTransaction();
@@ -219,6 +222,7 @@ public class DBHelper extends SQLiteOpenHelper
 	  db.execSQL(DROP_Category_SQL);
 	  db.execSQL(DROP_InOutDetails_SQL);
 	  db.execSQL(DROP_Project_SQL);
+	  db.execSQL(DROP_Profile_SQL);
 
 	  onCreate(db);
 	  Log.e("ERROR", "数据库更新成功");

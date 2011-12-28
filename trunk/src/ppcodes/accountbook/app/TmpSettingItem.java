@@ -12,6 +12,7 @@ import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.dao.DaoBusiness;
 import ppcodes.accountbook.entity.model.ModBusiness;
 import ppcodes.android.common.Dialogs;
+import ppcodes.android.common.StringHelper;
 import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,7 +43,6 @@ public class TmpSettingItem extends Activity
    // 类
    Dialogs dialogs;
    Session session;
-   final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");;
 
    // 字段
    int SETTING_TYPE;
@@ -52,11 +52,14 @@ public class TmpSettingItem extends Activity
 	  listView = (ListView) findViewById(R.id.listView_Act_Tmp_setting_item);
 	  imgNew = (ImageView) findViewById(R.id.imgNew_Act_Tmp_setting);
 	  edtNewItem = (EditText) findViewById(R.id.edtNewItem_Act_Tmp_setting);
-	  btnNewItem = (Button) findViewById(R.id.btnNewItem_Act_Tmp_setting);
+      edtNewItem.clearFocus();
+      btnNewItem = (Button) findViewById(R.id.btnNewItem_Act_Tmp_setting);
 	  txtTitle = (TextView) findViewById(R.id.txtTitle_Act_Tmp_setting);
 	  txtTitle.setText(getIntent().getStringExtra("TypeName"));
 
    }
+
+
 
    void InitControlsListener()
    {
@@ -140,6 +143,7 @@ public class TmpSettingItem extends Activity
 	  {
 		 dialogs.ShowOKAlertDialog(getString(R.string.alert_tip), getString(R.string.alert_notBeEmpty));
 	  }
+
       else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 	  {
 
@@ -158,7 +162,7 @@ public class TmpSettingItem extends Activity
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 	  {
-		 ModBusiness modBusiness = new ModBusiness(session.getUserId(), edtNewItem.getText().toString().trim(), dateFormat.format(new Date()), dateFormat.format(new Date()), 0, 0);
+		 ModBusiness modBusiness = new ModBusiness(session.getUserId(), edtNewItem.getText().toString().trim(), StringHelper.FormatDate(new Date()), StringHelper.FormatDate(new Date()), 0, 0);
 		 if (daoBusiness.InsertBusiness(modBusiness))
 		 {
 			LoadSetting();
@@ -274,6 +278,7 @@ public class TmpSettingItem extends Activity
 					 }	
 					 ModBusiness modBusiness = new ModBusiness();
 					 modBusiness.setBusinessName(txtName.getText().toString());
+					 modBusiness.setModifyTime(StringHelper.FormatDate(new Date()));
 					 daoBusiness.DeleteBusiness(modBusiness);
 					 LoadSetting();
 					 break;
@@ -307,11 +312,20 @@ public class TmpSettingItem extends Activity
 	  SETTING_TYPE = getIntent().getIntExtra(Enums.ItemTypeValue, 0);
 	  dialogs = new Dialogs(TmpSettingItem.this);
 	  session = (Session) getApplicationContext();
+
 	  InitControls();
 	  InitControlsListener();
 	  LoadSetting();
    }
 
+   @Override
+   protected void onResume()
+   {
+	  // TODO Auto-generated method stub
+	  super.onResume();
+	  LoadSetting();
+   }
+   
    /**
     * 加载所有商家
     * 

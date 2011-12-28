@@ -7,15 +7,22 @@ import java.util.Date;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.dao.DaoBusiness;
 import ppcodes.accountbook.entity.model.ModBusiness;
+import ppcodes.android.common.Dialogs;
+import ppcodes.android.common.StringHelper;
 import ppcodes.android.common.gvImageAdapter;
 import android.R.bool;
 import android.R.integer;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.sax.Element;
+import android.text.Editable;
+import android.text.Selection;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -36,9 +43,9 @@ public class TmpSettingItemEdit extends Activity
    int SETTING_TYPE;
    int imgId;
    String itemName;
+   Dialogs dialogs;
    
-   final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   
+
    void InitControls()
    {
 	 gvIcon=(GridView)findViewById(R.id.gvIcon_Act_Tmp_setting_item_edit);
@@ -52,6 +59,8 @@ public class TmpSettingItemEdit extends Activity
 	 
 	 edtName=(EditText)findViewById(R.id.edtName_Act_Tmp_setting_item_edit);
 	 edtName.setText(itemName);
+	 Editable mEditable=edtName.getText();
+	 Selection.setSelection(mEditable, mEditable.length());
 	 
 	 imgOK=(ImageView)findViewById(R.id.imgOK_Act_Tmp_setting_item_edit);
 
@@ -66,7 +75,15 @@ public class TmpSettingItemEdit extends Activity
 	     public void onClick(View v)
 	     {
 	  	  // TODO Auto-generated method stub
-	  	  if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
+	      if(edtName.getText().toString().trim().equals(""))//不能为空
+	      {
+	    	 dialogs.ShowOKAlertDialog(getString(R.string.alert_tip), getString(R.string.alert_notBeEmpty));	
+	      }
+		  else if (edtName.getText().toString().equals(itemName))//无更改直接返回
+		  {
+			 finish();
+		  }
+	      else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 		  {
 			 IsShowIconAndLoadIconList(true);
 		  }
@@ -86,9 +103,10 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
 			 modBusiness.setBusinessName(edtName.getText().toString().trim());
-			 modBusiness.setModifyTime(dateFormat.format(new Date()));
+			 modBusiness.setModifyTime(StringHelper.FormatDate(new Date()));
 			 DaoBusiness daoBusiness=new DaoBusiness(TmpSettingItemEdit.this);
 			 daoBusiness.UpdateBusinessName(modBusiness, itemName);
+			 finish();
 	      }	 
 	     }
 	  });
@@ -157,11 +175,21 @@ public class TmpSettingItemEdit extends Activity
 	  setContentView(R.layout.act_tmp_setting_item_edit);
 	  SETTING_TYPE = getIntent().getIntExtra(Enums.ItemTypeValue, 0);
 	  itemName=getIntent().getStringExtra("name");
-
+	  dialogs=new Dialogs(TmpSettingItemEdit.this);
 	  InitControls();
 	  InitControlsListener();
-
+          
 	  SetIconState();
+	  
+	  new Handler().postDelayed(new Runnable()// 界面进入时就自动打开输入法
+			{
+			   @Override
+			   public void run()
+			   {
+				  InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				  imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+			   }
+			}, 300);
 
 //      Class<?> cl=R.drawable.class;
 //      Field ff=null;
