@@ -99,7 +99,6 @@ public class ActSetting extends Activity
 			  else if (position == Enums.ItemType.About.getValue())
 			  {
 				intent.putExtra(Enums.ItemTypeName, "关于");
-
 			  }
 		   }
 		});
