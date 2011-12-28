@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PPAccountBook</string>
+    <string name="txtIn">收入总额：</string>
+    <string name="txtOut">支出总额：</string>
+    <string name="txtBudget">本月预算：</string>
+    <string name="txtBudgetBalance">预算余额：</string>
+    <string name="btnNewAccount">记一笔账</string>
+    <string name="txtDate">11月</string>
+    <string name="txtBudgetPro">预算状况</string>
+    <string name="txtYuan">元</string>
+    <string name="txtStream">流水</string>
+    <string name="txtxReport">报表</string>
+    <string name="txtConfig">设置</string>
+    <string name="txtBudgetBottom">预算</string>
+    <string name="newIn">新增收入</string>
+    <string name="newOut">新增支出</string>
+    <string name="money">金额</string>
+    <string name="txtNewType">类别</string>
+    <string name="txtNewChildType">子类</string>
+    <string name="txtNewAccount">账户</string>
+    <string name="txtNewBusiness">商家</string>
+    <string name="txtNewItem">项目</string>
+    <string name="txtNewComment">备注</string>
+    <string name="txtOK">确定</string>
+    <string name="txtCancel">取消</string>
+    <string name="app_nameCHS">PP账本</string>
+    <string name="txtUserName">帐号</string>
+    <string name="txtUserKey">密码</string>
+    <string name="txtLogin">登录</string>
+    <string name="chkShowKey">显示密码</string>
+    <string name="txtRememberName">记住</string>
+    <string name="txtSettingCurrentUser">当前账户:</string>
+    <string name="txtSettingDefaultCategory">默认项目设置:</string>
+    <string name="txtSettingDataAndAccount">数据和账户设置:</string>
+    
+    <!-- c_开头表示不变的控件文字-->
+    <string name="c_delete">删除</string>
+    <string name="c_setDefault">设为默认</string>
+    <string name="c_edit">编辑</string>
+    <string name="c_name">名称</string>
+    <string name="c_icon">图标</string>
+    <string name="c_save">保存</string>
+        
+    <!-- alert_开头表示警告信息--> 
+    <string name="alert_tip">提示</string>
+    <string name="alert_notBeEmpty">内容不能为空</string>
+    <string name="alert_canNotDel">不能删除该项</string>
+    
+    <!-- d_开头表示不变的初始定义-->
+    <string name="d_business">商家</string>
+    <string name="d_project">项目</string>
+    <string name="d_incoming">收入</string>
+    <string name="d_payout">支出</string>
+    <string name="d_account">账户</string>
+    <string name="d_dataManage">数据管理</string>	
+    <string name="d_otherSetting">其他设置</string>
+    <string name="d_about">关于</string>
+    <string name="d_aboutPP">关于PP账本</string>
+    <string name="d_none">无</string>
+</resources>
