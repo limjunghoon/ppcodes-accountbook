@@ -1,8 +1,6 @@
 package ppcodes.accountbook.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -24,38 +22,39 @@ public class DaoBusiness extends DaoBase
 
   
    
-   public void InitBusiness(int UserId)
-   {
-	  SQLiteDatabase db = null;
-	  SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	  try
-	  {
-		 String sqlString = "INSERT INTO [Business] (UserId,BusinessName,CreateTime,ModifyTime,Disabled,UseCount)" +
-	                        " SELECT "+UserId+",'无','"+tempDate.format(new Date())+"','"+tempDate.format(new Date())+"',0,0" +
-	                        " UNION ALL " +            
-			                " SELECT "+UserId+",'肯德基','"+tempDate.format(new Date())+"','"+tempDate.format(new Date())+"',0,0" +
-		 		            " UNION ALL " +
-		 		            " SELECT "+UserId+",'京东','"+tempDate.format(new Date())+"','"+tempDate.format(new Date())+"',0,0" +
-		 		            " UNION ALL " +
-		 		            " SELECT "+UserId+",'易迅','"+tempDate.format(new Date())+"','"+tempDate.format(new Date())+"',0,0" +
-		 		            " UNION ALL " +
-		 		            " SELECT "+UserId+",'新蛋','"+tempDate.format(new Date())+"','"+tempDate.format(new Date())+"',0,0";
-		 db = dbHelper.getWritableDatabase();
-		 db.execSQL(sqlString);
-	  }
-	  catch (Exception e)
-	  {
-		 // TODO: handle exception
-		 e.printStackTrace();
-	  }
-	  finally
-	  {
-		 if (db != null)
-		 {
-			db.close();
-		 }
-	  }
-   }
+//   public void InitBusiness(int UserId)
+//   {
+//	  SQLiteDatabase db = null;
+//
+//	  String nowTime=StringHelper.FormatDate(new Date());
+//	  try
+//	  {
+//		 String sqlString = "INSERT INTO [Business] (UserId,BusinessName,CreateTime,ModifyTime,Disabled,UseCount)" +
+//	                        " SELECT "+UserId+",'无',"+nowTime+","+nowTime+",0,0" +
+//	                        " UNION ALL " +            
+//			                " SELECT "+UserId+",'肯德基',"+nowTime+","+nowTime+",0,0" +
+//		 		            " UNION ALL " +
+//		 		            " SELECT "+UserId+",'京东',"+nowTime+","+nowTime+",0,0" +
+//		 		            " UNION ALL " +
+//		 		            " SELECT "+UserId+",'易迅',"+nowTime+","+nowTime+",0,0" +
+//		 		            " UNION ALL " +
+//		 		            " SELECT "+UserId+",'新蛋',"+nowTime+","+nowTime+",0,0";
+//		 db = dbHelper.getWritableDatabase();
+//		 db.execSQL(sqlString);
+//	  }
+//	  catch (Exception e)
+//	  {
+//		 // TODO: handle exception
+//		 e.printStackTrace();
+//	  }
+//	  finally
+//	  {
+//		 if (db != null)
+//		 {
+//			db.close();
+//		 }
+//	  }
+//   }
 
    public List<String> GetAllBusinessByUserId(int UserId)
    {
@@ -132,7 +131,7 @@ public class DaoBusiness extends DaoBase
 			} 
 			while (cursor.moveToNext());
 			
-			String sqlString = "INSERT INTO [Business] ([UserId],[BusinessName],[CreateTime],[ModifyTime],[Disabled],[UseCount]) Values (%s,'%s','%s','%s',%s,%s)";
+			String sqlString = "INSERT INTO [Business] ([UserId],[BusinessName],[CreateTime],[ModifyTime],[Disabled],[UseCount]) Values (%s,'%s',%s,%s,%s,%s)";
 			sqlString = String.format(sqlString,
 			                       modBusiness.getUserId(),
 			                       modBusiness.getBusinessName(),
@@ -177,7 +176,7 @@ public class DaoBusiness extends DaoBase
 	  {
 		db=dbHelper.getWritableDatabase();
 		int sID=super.getIdByName(db, DicBusiness.BusinessId, DicBusiness.TableName, DicBusiness.BusinessName, OldName);
-		String sqlString="UPDATE [Business] SET [BusinessName]='%s',[ModifyTime]='%s' WHERE [Disabled]=0 AND [BusinessId]=%s";
+		String sqlString="UPDATE [Business] SET [BusinessName]='%s',[ModifyTime]=%s WHERE [Disabled]=0 AND [BusinessId]=%s";
         sqlString=String.format(sqlString, modBusiness.getBusinessName(),modBusiness.getModifyTime(),sID);
         db.execSQL(sqlString);
 	  }
@@ -246,7 +245,7 @@ public class DaoBusiness extends DaoBase
 
    
    /**
-    * 删除一个商家，BusinessName必须赋值
+    * 删除一个商家，BusinessName,ModifyTime必须赋值
     * @param modBusiness
     */
    public void DeleteBusiness(ModBusiness modBusiness)
@@ -256,8 +255,8 @@ public class DaoBusiness extends DaoBase
 	  {
 		 db=dbHelper.getWritableDatabase();
 		 int sID=super.getIdByName(db, DicBusiness.BusinessId, DicBusiness.TableName, DicBusiness.BusinessName, modBusiness.getBusinessName());
-		 String sqlString="UPDATE [Business] SET [Disabled]=1 WHERE [BusinessId]=%s";
-         sqlString=String.format(sqlString, String.valueOf(sID));
+		 String sqlString="UPDATE [Business] SET [Disabled]=1,[ModifyTime]=%s WHERE [BusinessId]=%s";
+         sqlString=String.format(sqlString, modBusiness.getModifyTime(),String.valueOf(sID));
          db.execSQL(sqlString);
 	  }
 	  catch (Exception e)

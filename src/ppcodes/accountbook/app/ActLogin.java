@@ -2,14 +2,19 @@ package ppcodes.accountbook.app;
 
 import java.security.Key;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ppcodes.accountbook.app.R;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.dao.DaoBusiness;
+import ppcodes.accountbook.dao.DaoInitDataBase;
+import ppcodes.accountbook.dao.DaoProfile;
 import ppcodes.accountbook.dao.DaoUserInfo;
 import ppcodes.accountbook.entity.model.ModUserInfo;
 import ppcodes.android.common.Dialogs;
+import ppcodes.android.common.StringHelper;
+import android.R.integer;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +46,7 @@ public class ActLogin extends Activity
    // 类
    private Dialogs dialogs;
    private DaoUserInfo daoLogin;
-   private DaoBusiness daoBusiness;
+   private DaoInitDataBase daoInitDataBase;
 
    private final String CACHE_USERNAME = "UserName";
 
@@ -89,13 +94,14 @@ public class ActLogin extends Activity
 						// TODO Auto-generated method stub
 						dialog.dismiss();
 						dialogs.ShowLoadingDialogNoTitle("请稍候。。。");
-						SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), tempDate.format(new java.util.Date()), tempDate
-							  .format(new java.util.Date()), 0);
+                        String nowTime=StringHelper.FormatDate(new Date());
+						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
 						daoLogin.InsertUser(modUserInfo);
 						uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());
-						daoBusiness = new DaoBusiness(ActLogin.this);
-						daoBusiness.InitBusiness(uId);
+						
+						//初始化数据库的数据
+						daoInitDataBase=new DaoInitDataBase(ActLogin.this);
+						daoInitDataBase.InitDataBase(uId);
 
 						LoginSuccess();
 					 }
@@ -145,11 +151,7 @@ public class ActLogin extends Activity
 	  dialogs.ShowOKAlertDialog("提示", "使用不存在的账户和密码会自动创建一个新的账户");
    }
 
-   // 初始化数据库数据
-   void InitDataBase()
-   {
 
-   }
 
    // 初始化控件
    void InitControls()
