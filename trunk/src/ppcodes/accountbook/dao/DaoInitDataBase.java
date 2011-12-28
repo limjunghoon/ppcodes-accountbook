@@ -20,7 +20,7 @@ public class DaoInitDataBase extends DaoBase
    {
 	  SQLiteDatabase db = null;
 
-	  String nowTime=StringHelper.FormatDate(new Date());
+	  String nowTime=StringHelper.FormatDateTime(new Date());
 	  try
 	  {
 		 

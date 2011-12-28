@@ -103,7 +103,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
 			 modBusiness.setBusinessName(edtName.getText().toString().trim());
-			 modBusiness.setModifyTime(StringHelper.FormatDate(new Date()));
+			 modBusiness.setModifyTime(StringHelper.FormatDateTime(new Date()));
 			 DaoBusiness daoBusiness=new DaoBusiness(TmpSettingItemEdit.this);
 			 daoBusiness.UpdateBusinessName(modBusiness, itemName);
 			 finish();

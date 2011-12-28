@@ -94,7 +94,7 @@ public class ActLogin extends Activity
 						// TODO Auto-generated method stub
 						dialog.dismiss();
 						dialogs.ShowLoadingDialogNoTitle("请稍候。。。");
-                        String nowTime=StringHelper.FormatDate(new Date());
+                        String nowTime=StringHelper.FormatDateTime(new Date());
 						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
 						daoLogin.InsertUser(modUserInfo);
 						uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());
