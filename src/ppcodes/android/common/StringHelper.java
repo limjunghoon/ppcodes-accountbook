@@ -7,7 +7,7 @@ public class StringHelper
 {
    static SimpleDateFormat tempDate = new SimpleDateFormat("yyyyMMddHHmmss");
    
-   public static String FormatDate(Date date)
+   public static String FormatDateTime(Date date)
    {
 	  return tempDate.format(date);  
    }

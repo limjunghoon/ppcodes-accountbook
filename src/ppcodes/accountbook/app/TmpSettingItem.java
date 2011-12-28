@@ -162,7 +162,7 @@ public class TmpSettingItem extends Activity
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 	  {
-		 ModBusiness modBusiness = new ModBusiness(session.getUserId(), edtNewItem.getText().toString().trim(), StringHelper.FormatDate(new Date()), StringHelper.FormatDate(new Date()), 0, 0);
+		 ModBusiness modBusiness = new ModBusiness(session.getUserId(), edtNewItem.getText().toString().trim(), StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0);
 		 if (daoBusiness.InsertBusiness(modBusiness))
 		 {
 			LoadSetting();
@@ -278,7 +278,7 @@ public class TmpSettingItem extends Activity
 					 }	
 					 ModBusiness modBusiness = new ModBusiness();
 					 modBusiness.setBusinessName(txtName.getText().toString());
-					 modBusiness.setModifyTime(StringHelper.FormatDate(new Date()));
+					 modBusiness.setModifyTime(StringHelper.FormatDateTime(new Date()));
 					 daoBusiness.DeleteBusiness(modBusiness);
 					 LoadSetting();
 					 break;
