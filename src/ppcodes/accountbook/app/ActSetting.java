@@ -8,6 +8,8 @@ import java.util.Map;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.common.Enums.ItemType;
+import ppcodes.accountbook.dao.DaoProfile;
+import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.android.common.Dialogs;
 
 import android.app.Activity;
@@ -33,7 +35,7 @@ public class ActSetting extends Activity
    private TextView txtUserName;
 
    Session session;
-   
+   DaoProfile daoProfile;
    
    private void InitControls()
    {
@@ -119,7 +121,6 @@ public class ActSetting extends Activity
 			R.layout.listview_setting_item, 
 			new String[] { "img", "name","default" }, 
 		    new int[] { R.id.img_listview_setting_item,R.id.txtItemtype_listview_setting_item,R.id.txtDefault_listview_setting_item});
-
 	  settingItemListVew.setAdapter(sAdapter);
 
    }
@@ -150,35 +151,38 @@ public class ActSetting extends Activity
    public List<Map<String, Object>> getData()
    {
 	  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
+	  daoProfile=new DaoProfile(ActSetting.this);
+	  
+	  List<String> sList=daoProfile.GetProfileNameByUserId(session.getUserId());
+	  
 	  Map<String, Object> map = new HashMap<String, Object>();
 	  map.put("img", R.drawable.setting_category_income_icon);
 	  map.put("name",getString(R.string.d_incoming));
-	  map.put("default", "工作收入");
+	  map.put("default", sList.get(0));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
 	  map.put("img", R.drawable.setting_category_payout_icon);
 	  map.put("name", getString(R.string.d_payout));
-	  map.put("default", "交通支出");
+	  map.put("default", sList.get(1));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
 	  map.put("img", R.drawable.setting_project_icon);
 	  map.put("name",getString(R.string.d_project));
-	  map.put("default", "无");
+	  map.put("default", sList.get(2));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
 	  map.put("img", R.drawable.setting_account_icon);
 	  map.put("name", getString(R.string.d_account));
-	  map.put("default", "中国银行");
+	  map.put("default", sList.get(3));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
 	  map.put("img", R.drawable.setting_corp_icon);
 	  map.put("name", getString(R.string.d_business));
-	  map.put("default", "KFC");
+	  map.put("default", sList.get(4));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
