@@ -1,6 +1,9 @@
 package ppcodes.accountbook.dao;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -54,30 +57,41 @@ public class DaoProfile extends DaoBase
     * @param UserId
     * @return
     */
-   public ModProfile GetProfileByUserId(int UserId)
+   public List<String> GetProfileNameByUserId(int UserId)
    {
 	  SQLiteDatabase db = null;
 	  Cursor cursor = null;
 	  try
 	  {
+
 		 db = dbHelper.getReadableDatabase();
 		 cursor = db.rawQuery(
-			   "Select [UserId],[InCategoryId],[OutCategoryId],[BusinessId],[AccountId],[ProjectId] From [Profile] Where [UserId]=? And [Disabled]=0",
+			   "Select b.[CategoryName] as CategoryIn,c.[CategoryName] as CategoryOut,d.[ProjectName],e.[AccountName],f.[BusinessName],a.[UserId]" +
+			   " From [Profile] a" +
+			   " Inner Join Category b On b.CategoryId=a.InCategoryId" +
+			   " Inner Join Category c On c.CategoryId=a.OutCategoryId" +
+			   " Inner Join Project d On d.ProjectId=a.ProjectId" +
+			   " Inner Join Account e On e.AccountId=a.AccountId" +
+			   " Inner Join Business f On f.BusinessId=a.BusinessId" +
+			   " Where a.[UserId]=? And a.[Disabled]=0",
+			   
 			   new String[] { String.valueOf(UserId) });
+		 
 		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
-		 {
-			ModProfile modProfile=new ModProfile();
+		 {  
+			List<String> list=new ArrayList<String>();
 			do
 			{
-			  modProfile.setUserId(cursor.getInt(0));
-			  modProfile.setInCategoryId(cursor.getInt(1));
-			  modProfile.setOutCategoryId(cursor.getInt(2));
-			  modProfile.setBusinessId(cursor.getInt(3));
-			  modProfile.setAccountId(cursor.getInt(4));
-			  modProfile.setProjectId(cursor.getInt(5));
+			   list.add(cursor.getString(0));
+			   list.add(cursor.getString(1));
+			   list.add(cursor.getString(2));
+			   list.add(cursor.getString(3));
+			   list.add(cursor.getString(4));
+			   list.add(cursor.getString(5));
+
 			} 
 			while (cursor.moveToNext());
-			return modProfile;
+			return list;
 		 }
 		 else
 		 {

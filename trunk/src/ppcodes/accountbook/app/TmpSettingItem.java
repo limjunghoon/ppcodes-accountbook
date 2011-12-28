@@ -8,8 +8,10 @@ import java.util.Map;
 
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
+import ppcodes.accountbook.dao.DaoAccount;
 import ppcodes.accountbook.dao.DaoBusiness;
 import ppcodes.accountbook.dao.DaoProfile;
+import ppcodes.accountbook.dao.DaoProject;
 import ppcodes.accountbook.entity.dictionary.DicBusiness;
 import ppcodes.accountbook.entity.model.ModBusiness;
 import ppcodes.accountbook.entity.model.ModProfile;
@@ -33,7 +35,6 @@ public class TmpSettingItem extends Activity
 {
    // 控件定义
    private TextView txtTitle;
-   private DaoBusiness daoBusiness;
    private ListView listView;
    private ImageView imgNew;
    private EditText edtNewItem;
@@ -43,7 +44,11 @@ public class TmpSettingItem extends Activity
    Dialogs dialogs;
    Session session;
    DaoProfile daoProfile;
+   DaoBusiness daoBusiness;
+   DaoProject daoProject;
+   DaoAccount daoAccount;
 
+   
    // 字段
    int SETTING_TYPE;
 
@@ -212,6 +217,7 @@ public class TmpSettingItem extends Activity
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 	  {
+		daoProfile=new DaoProfile(TmpSettingItem.this);
         daoProfile.UpdateProfile(modProfile, DicBusiness.TableName, DicBusiness.BusinessName, sName, DicBusiness.BusinessId);
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
