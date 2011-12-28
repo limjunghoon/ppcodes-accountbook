@@ -1,6 +1,5 @@
 package ppcodes.accountbook.app;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TmpSettingItem extends Activity
 {
@@ -228,6 +226,7 @@ public class TmpSettingItem extends Activity
 	  {
 
 	  }
+	  finish();
    }
 
    void ShowEditMenu(View itemView)
