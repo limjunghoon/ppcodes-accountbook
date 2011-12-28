@@ -10,12 +10,13 @@ import java.util.Map;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.dao.DaoBusiness;
+import ppcodes.accountbook.dao.DaoProfile;
+import ppcodes.accountbook.entity.dictionary.DicBusiness;
 import ppcodes.accountbook.entity.model.ModBusiness;
+import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
-import android.R.integer;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class TmpSettingItem extends Activity
    // 类
    Dialogs dialogs;
    Session session;
+   DaoProfile daoProfile;
 
    // 字段
    int SETTING_TYPE;
@@ -76,10 +78,11 @@ public class TmpSettingItem extends Activity
 	  listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 	  {
 		 @Override
-		 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+		 public void onItemClick(AdapterView<?> parentView, View itemView, int posion, long index)
 		 {
-			// TODO Auto-generated method stub
-			Toast.makeText(TmpSettingItem.this, "短按", 1000);
+			// TODO Auto-generated method stubposion
+			String sName=((TextView)itemView.findViewById(R.id.txtItemtype_listview_setting_item_details)).getText().toString();
+			SetDefault(sName);
 		 }
 	  });
 
@@ -188,27 +191,30 @@ public class TmpSettingItem extends Activity
 	  edtNewItem.clearFocus();
    }
 
-   void SetDefault()
+   void SetDefault(String sName)
    {
+	  ModProfile modProfile=new ModProfile();
+	  modProfile.setUserId(session.getUserId());
+	  modProfile.setModifyTime(StringHelper.FormatDateTime(new Date()));
 	  if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 	  {
-
+		 
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Payout.getValue())
 	  {
-
+		 
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Account.getValue())
 	  {
-
+		 
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Project.getValue())
 	  {
-
+        
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 	  {
-
+        daoProfile.UpdateProfile(modProfile, DicBusiness.TableName, DicBusiness.BusinessName, sName, DicBusiness.BusinessId);
 	  }
 	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
 	  {

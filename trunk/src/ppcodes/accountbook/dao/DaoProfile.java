@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import ppcodes.accountbook.entity.dictionary.DicBusiness;
 import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.android.common.DBHelper;
 
@@ -62,7 +63,7 @@ public class DaoProfile extends DaoBase
 	  {
 		 db = dbHelper.getReadableDatabase();
 		 cursor = db.rawQuery(
-			   "Select [UserId],[InCategoryId],[OutCategoryId],[BusinessId],[BudgetId],[ProjectId] From [Profile] Where [UserId]=? And [Disabled]=0",
+			   "Select [UserId],[InCategoryId],[OutCategoryId],[BusinessId],[AccountId],[ProjectId] From [Profile] Where [UserId]=? And [Disabled]=0",
 			   new String[] { String.valueOf(UserId) });
 		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
 		 {
@@ -73,7 +74,7 @@ public class DaoProfile extends DaoBase
 			  modProfile.setInCategoryId(cursor.getInt(1));
 			  modProfile.setOutCategoryId(cursor.getInt(2));
 			  modProfile.setBusinessId(cursor.getInt(3));
-			  modProfile.setBudgetId(cursor.getInt(4));
+			  modProfile.setAccountId(cursor.getInt(4));
 			  modProfile.setProjectId(cursor.getInt(5));
 			} 
 			while (cursor.moveToNext());
@@ -108,18 +109,18 @@ public class DaoProfile extends DaoBase
    
    /**
     * 更新配置
-    * 需要赋值ModifyTime,UserId,要更新的字段值，UpdateField要更新的字段名字
-    * @param modProfile，updateField
+    * 需要赋值ModifyTime,UserId,要更新的id对应的名称，UpdateField要更新的字段名字
+    * @param modProfile，name,updateField
     */
-   public void UpdateProfile(ModProfile modProfile,String updateField)
+   public void UpdateProfile(ModProfile modProfile,String tablaName,String fieldName,String name,String updateField)
    {
 	  SQLiteDatabase db = null;
 	  try
 	  {
 		db=dbHelper.getWritableDatabase();
-		Class<?> cl=modProfile.getClass();
+		int sId=super.getIdByName(db, updateField, tablaName, fieldName, name);
         String sqlString="UPDATE [Profile] SET [%s]=%s,[ModifyTime]=%s WHERE [Disabled]=0 AND [UserId]=%s";
-        sqlString=String.format(sqlString, updateField,cl.getField(updateField).getInt(cl) ,modProfile.getModifyTime(),modProfile.getUserId());
+        sqlString=String.format(sqlString, updateField,sId ,modProfile.getModifyTime(),modProfile.getUserId());
         db.execSQL(sqlString);
 	  }
 	  catch (Exception e)

@@ -37,7 +37,7 @@ public class DaoInitDataBase extends DaoBase
 		 		            " SELECT "+UserId+",'新蛋',"+nowTime+","+nowTime+",0,0";
 		 
 		 //初始化Profile
-		 String sqlProfile = "INSERT INTO [Profile] ([UserId],[InCategoryId],[OutCategoryId],[BusinessId],[BudgetId],[ProjectId],[CreateTime],[ModifyTime]) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)";
+		 String sqlProfile = "INSERT INTO [Profile] ([UserId],[InCategoryId],[OutCategoryId],[BusinessId],[AccountId],[ProjectId],[CreateTime],[ModifyTime]) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)";
 		 sqlProfile=String.format(sqlProfile, UserId,1,1,1,1,1,nowTime,nowTime);
 		 
 		 db = dbHelper.getWritableDatabase();
