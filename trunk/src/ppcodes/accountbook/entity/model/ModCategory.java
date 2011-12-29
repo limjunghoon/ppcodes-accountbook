@@ -13,7 +13,7 @@ public class ModCategory
 	  ParentCategoryId=_ParentCategoryId;
 	  UserId=_UserId;
 	  InOrOut=_InOrOut;
-	  CatagoryName=_CategoryName;
+	  CategoryName=_CategoryName;
 	  Icon=_Icon;
 	  UseCount=_UseCount;
 	  Disabled=_Disabled;
@@ -25,7 +25,7 @@ public class ModCategory
    private Integer ParentCategoryId;
    private Integer UserId;
    private Integer InOrOut;
-   private String CatagoryName;   
+   private String CategoryName;   
    private String Icon;
    private Integer UseCount;
    private Integer Disabled;
@@ -64,13 +64,13 @@ public class ModCategory
    {
       InOrOut = inOrOut;
    }
-   public String getCatagoryName()
+   public String getCategoryName()
    {
-      return CatagoryName;
+      return CategoryName;
    }
-   public void setCatagoryName(String catagoryName)
+   public void setCategoryName(String categoryName)
    {
-      CatagoryName = catagoryName;
+      CategoryName = categoryName;
    }
    public Integer getUseCount()
    {

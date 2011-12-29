@@ -15,10 +15,10 @@ public  class Enums
   public enum ItemType
   {
 	Incoming(0), 
-	Payout(1), 
-	Account(2), 
-	Project(3), 
-	Business(4), 
+	Payout(1), 	
+	Project(2),
+	Account(3), 
+    Business(4), 
 	DataManage(5), 
 	OtherSetting(6), 
 	About(7);
@@ -41,11 +41,11 @@ public  class Enums
 		  case 0:
 			 return "收入类型";
 		  case 1:
-			 return "支出类型";
+			 return "支出类型";		
 		  case 2:
-			 return "账户";
-		  case 3:
 			 return "项目";
+		  case 3:
+			 return "账户";
 		  case 4:
 			 return "商家";
 		  case 5:
@@ -59,6 +59,23 @@ public  class Enums
 	   }
 	}
   }
+  
+  public enum InOrOut
+  {
+	 Payout(0),
+	 Incoming(1);
+	//构造器
+	 InOrOut(int value)
+		{
+		  this.value = value;
+		}
+		private final int value;
+		public int getValue()
+		{
+		  return value;
+		}
+  }
+  
   public static String ItemTypeName="ItemTypeName";
   public static String ItemTypeValue="ItemTypeValue";
 }

@@ -7,9 +7,8 @@ public class ModProject
 	  
    }
    
-   public ModProject(Integer _ProjectId, Integer _UserId,String _ProjectName,Integer _UseCount,Integer _Disabled,String _CreateTime,String _ModifyTime)
+   public ModProject(Integer _UserId,String _ProjectName,Integer _UseCount,Integer _Disabled,String _CreateTime,String _ModifyTime)
    {
-	  ProjectId=_ProjectId;
 	  UserId=_UserId;
 	  ProjectName=_ProjectName;
 	  UseCount=_UseCount;

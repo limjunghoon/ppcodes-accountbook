@@ -46,7 +46,8 @@
     <string name="alert_tip">提示</string>
     <string name="alert_notBeEmpty">内容不能为空</string>
     <string name="alert_canNotDel">不能删除该项</string>
-    
+    <string name="alert_existOrError">已存在或出错</string>
+        
     <!-- d_开头表示不变的初始定义-->
     <string name="d_business">商家</string>
     <string name="d_project">项目</string>

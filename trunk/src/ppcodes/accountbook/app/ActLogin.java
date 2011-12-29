@@ -93,6 +93,8 @@ public class ActLogin extends Activity
 					 {
 						// TODO Auto-generated method stub
 						dialog.dismiss();
+//						Looper.loop();
+//						Looper.prepare();
 						dialogs.ShowLoadingDialogNoTitle("请稍候。。。");
                         String nowTime=StringHelper.FormatDateTime(new Date());
 						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
@@ -123,7 +125,7 @@ public class ActLogin extends Activity
    void LoginSuccess()
    {
 	  // 进度条结束
-	  dialogs.setDialogDismiss();
+//	  dialogs.setDialogDismiss();
 	  // 将登陆加入全局变量
 	  Session session = (Session) getApplicationContext();
 	  session.setUserName(edtUserName.getText().toString().trim());

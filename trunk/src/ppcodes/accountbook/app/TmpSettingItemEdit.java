@@ -5,8 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ppcodes.accountbook.common.Enums;
+import ppcodes.accountbook.common.Session;
+import ppcodes.accountbook.dao.DaoAccount;
 import ppcodes.accountbook.dao.DaoBusiness;
+import ppcodes.accountbook.dao.DaoProject;
+import ppcodes.accountbook.entity.model.ModAccount;
 import ppcodes.accountbook.entity.model.ModBusiness;
+import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
 import ppcodes.android.common.gvImageAdapter;
@@ -42,9 +47,10 @@ public class TmpSettingItemEdit extends Activity
    // 字段
    int SETTING_TYPE;
    int imgId;
+   
+   Session session;
    String itemName;
    Dialogs dialogs;
-   
 
    void InitControls()
    {
@@ -85,28 +91,62 @@ public class TmpSettingItemEdit extends Activity
 		  }
 	      else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 		  {
-			 IsShowIconAndLoadIconList(true);
+			
 		  }
 		  else if (SETTING_TYPE == Enums.ItemType.Payout.getValue())
 		  {
-			 IsShowIconAndLoadIconList(true);
+			 
 		  }
 		  else if (SETTING_TYPE == Enums.ItemType.Account.getValue())
 		  {
-			 IsShowIconAndLoadIconList(false);
+			 ModAccount modAccount=new ModAccount();
+			 modAccount.setAccountName(edtName.getText().toString().trim());
+			 modAccount.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modAccount.setUserId(session.getUserId());
+			 
+			 DaoAccount daoAccount=new DaoAccount(TmpSettingItemEdit.this);
+			 if(daoAccount.UpdateAccountName(modAccount, itemName))
+			 {
+				finish();
+			 }
+			 else
+			 {
+				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"账户"+getString(R.string.alert_existOrError));
+			 };
 		  }
 		  else if (SETTING_TYPE == Enums.ItemType.Project.getValue())
 		  {
-			 IsShowIconAndLoadIconList(false);
+			 ModProject modProject=new ModProject();
+			 modProject.setProjectName(edtName.getText().toString().trim());
+			 modProject.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modProject.setUserId(session.getUserId());
+			 
+			 DaoProject daoProject=new DaoProject(TmpSettingItemEdit.this);
+			 if(daoProject.UpdateProjectName(modProject, itemName))
+			 {
+				finish();
+			 }
+			 else
+			 {
+				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"项目"+getString(R.string.alert_existOrError));
+			 }
 		  }
 		  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
 			 modBusiness.setBusinessName(edtName.getText().toString().trim());
 			 modBusiness.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modBusiness.setUserId(session.getUserId());
+			 
 			 DaoBusiness daoBusiness=new DaoBusiness(TmpSettingItemEdit.this);
-			 daoBusiness.UpdateBusinessName(modBusiness, itemName);
-			 finish();
+			 if(daoBusiness.UpdateBusinessName(modBusiness, itemName))
+			 {
+				finish();
+			 }
+			 else
+			 {
+				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"商家"+getString(R.string.alert_existOrError));
+			 }
 	      }	 
 	     }
 	  });
@@ -176,6 +216,7 @@ public class TmpSettingItemEdit extends Activity
 	  SETTING_TYPE = getIntent().getIntExtra(Enums.ItemTypeValue, 0);
 	  itemName=getIntent().getStringExtra("name");
 	  dialogs=new Dialogs(TmpSettingItemEdit.this);
+	  session=(Session)getApplicationContext();
 	  InitControls();
 	  InitControlsListener();
           
