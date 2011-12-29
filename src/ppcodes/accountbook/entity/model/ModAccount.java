@@ -8,9 +8,8 @@ public class ModAccount
 	  
    }
    
-   public ModAccount(Integer _AccountId,Integer _UserId,String _AccountName,Integer _UseCount,Integer _Disabled,String _CreateTime,String _ModifyTime)
+   public ModAccount(Integer _UserId,String _AccountName,Integer _UseCount,Integer _Disabled,String _CreateTime,String _ModifyTime)
    {
-	 AccountId=_AccountId;
 	 UserId=_UserId;
 	 AccountName=_AccountName;
 	 UseCount=_UseCount;

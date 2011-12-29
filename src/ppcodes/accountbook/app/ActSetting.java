@@ -33,18 +33,19 @@ public class ActSetting extends Activity
    private ListView settingItemListVew;
    private LayoutInflater mInflater;
    private TextView txtUserName;
-
+   
+   Dialogs dialogs;
    Session session;
    DaoProfile daoProfile;
    
-   private void InitControls()
+   void InitControls()
    {
 	  settingItemListVew = (ListView) findViewById(R.id.settingItemListVew);
 	  txtUserName=(TextView)findViewById(R.id.txtUserName_Act_setting);
 	  txtUserName.setText(session.getUserName());
    }
 
-   private void IniteControlsListener()
+   void IniteControlsListener()
    {
 	  settingItemListVew.setOnItemClickListener(new AdapterView.OnItemClickListener()
 	    {
@@ -58,6 +59,7 @@ public class ActSetting extends Activity
 				intent.setClass(ActSetting.this, TmpSettingItem.class);
 				intent.putExtra(Enums.ItemTypeName, Enums.ItemType.Incoming.getChineseName());
 				intent.putExtra(Enums.ItemTypeValue, position);
+				intent.putExtra("IsParent", true);
 				startActivityForResult(intent, position);
 			  }
 			  else if (position == Enums.ItemType.Payout.getValue())
@@ -65,19 +67,20 @@ public class ActSetting extends Activity
 				intent.setClass(ActSetting.this, TmpSettingItem.class);
 				intent.putExtra(Enums.ItemTypeName, Enums.ItemType.Payout.getChineseName());
 				intent.putExtra(Enums.ItemTypeValue, position);
-				startActivityForResult(intent, position);
-			  }
-			  else if (position == Enums.ItemType.Account.getValue())
-			  {
-				intent.setClass(ActSetting.this, TmpSettingItem.class);
-				intent.putExtra(Enums.ItemTypeName, Enums.ItemType.Account.getChineseName());
-				intent.putExtra(Enums.ItemTypeValue, position);
+				intent.putExtra("IsParent", true);
 				startActivityForResult(intent, position);
 			  }
 			  else if (position == Enums.ItemType.Project.getValue())
 			  {
 				intent.setClass(ActSetting.this, TmpSettingItem.class);
 				intent.putExtra(Enums.ItemTypeName, Enums.ItemType.Project.getChineseName());
+				intent.putExtra(Enums.ItemTypeValue, position);
+				startActivityForResult(intent, position);
+			  }
+			  else if (position == Enums.ItemType.Account.getValue())
+			  {
+				intent.setClass(ActSetting.this, TmpSettingItem.class);
+				intent.putExtra(Enums.ItemTypeName, Enums.ItemType.Account.getChineseName());
 				intent.putExtra(Enums.ItemTypeValue, position);
 				startActivityForResult(intent, position);
 			  }
@@ -101,12 +104,23 @@ public class ActSetting extends Activity
 			  else if (position == Enums.ItemType.About.getValue())
 			  {
 				intent.putExtra(Enums.ItemTypeName, "关于");
+				intent.setClass(ActSetting.this, ActAbout.class);
+				startActivity(intent);
 			  }
 		   }
 		});
    }
 
-   Dialogs dialogs;
+   void BindData()
+   {
+	  SimpleAdapter sAdapter = new SimpleAdapter(this, getData(),
+			R.layout.listview_setting_item, 
+			new String[] { "img", "name","default" }, 
+		    new int[] { R.id.img_listview_setting_item,R.id.txtItemtype_listview_setting_item,R.id.txtDefault_listview_setting_item});
+	  settingItemListVew.setAdapter(sAdapter);
+   }
+   
+
 
    public void onCreate(Bundle savedInstanceState)
    {
@@ -117,12 +131,17 @@ public class ActSetting extends Activity
 	  session=(Session)getApplicationContext();
 	  InitControls();
 	  IniteControlsListener();
-	  SimpleAdapter sAdapter = new SimpleAdapter(this, getData(),
-			R.layout.listview_setting_item, 
-			new String[] { "img", "name","default" }, 
-		    new int[] { R.id.img_listview_setting_item,R.id.txtItemtype_listview_setting_item,R.id.txtDefault_listview_setting_item});
-	  settingItemListVew.setAdapter(sAdapter);
+	  BindData();
+   }
 
+   
+   
+   @Override
+   protected void onResume()
+   {
+	  // TODO Auto-generated method stub
+	  super.onResume();
+	  BindData();
    }
 
    @Override
