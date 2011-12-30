@@ -41,9 +41,9 @@ public class DataHelper extends Activity
 	  return R.drawable.icon_category_default;
    }
    
-   public static String GetDrawName(Drawable draw)
-   {
-	  
-   }
+//   public static String GetDrawName(Drawable draw)
+//   {
+//	  
+//   }
 
 }
