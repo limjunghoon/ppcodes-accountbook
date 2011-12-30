@@ -18,7 +18,36 @@ public class DaoCategory extends DaoBase
    {
 	  dbHelper = new DBHelper(context);
    }
-
+    
+   /**
+    * 默认返回0
+    * @param CategoryName
+    * @return
+    */
+   public int GetCategoryId(String CategoryName)
+   {
+	  SQLiteDatabase db = null;
+	  try
+	  {
+		 db = dbHelper.getWritableDatabase();
+		 int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, CategoryName);
+         return sID;
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+	  }
+	  return 0;
+   }
+   
    /**
     * 判断是否存在此种类的名称，存在则添加失败，不存在则添加新种类
     * 需要ParentCategoryId,CategoryName,Icon,InOrOut,UserId
@@ -26,7 +55,7 @@ public class DaoCategory extends DaoBase
     * @param modCategory
     * @return false表示插入失败或者已经存在用户 true表示插入成功
     */
-   public boolean InsertBusiness(ModCategory modCategory)
+   public boolean InsertCategory(ModCategory modCategory)
    {
 	  SQLiteDatabase db = null;
 	  Cursor cursor = null;
@@ -78,7 +107,7 @@ public class DaoCategory extends DaoBase
    }
 
    /**
-    * InOrOut 0代表支出1代表收入
+    * InOrOut 2代表支出1代表收入
     * 
     * @param UserId
     * @param InOrOut
@@ -128,15 +157,10 @@ public class DaoCategory extends DaoBase
 	  return null;
    }
 
-   /**
-    * 
-    * @param UserId
-    * @param InOrOut
-    * @return
-    */
+  
 
    /**
-    * CategoryName, UserId, InOrOut必填 0代表支出1代表收入
+    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入
     * 
     * @param modCategory
     * @return
@@ -187,7 +211,7 @@ public class DaoCategory extends DaoBase
    }
 
    /**
-    * CategoryName, UserId, InOrOut必填 0代表支出1代表收入 0为异常
+    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入 0为异常
     * 
     * @param modCategory
     * @return
@@ -292,7 +316,7 @@ public class DaoCategory extends DaoBase
    }
 
    /**
-    * 删除种类 需要赋值CategoryName,ParentCategoryId,ModifyTime,UserId,InOrOut,Icon,
+    * 删除种类 需要赋值CategoryName,ParentCategoryId,ModifyTime,UserId
     * 
     * @param modBusiness
     */
@@ -305,8 +329,8 @@ public class DaoCategory extends DaoBase
 		 db = dbHelper.getWritableDatabase();
 		 int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, modCategory.getCategoryName());
 
-		 String sqlString = "UPDATE [Category] SET [CategoryName]='%s',[ModifyTime]=%s,[Icon]=%s WHERE [Disabled]=0 AND [CategoryId]=%s";
-		 sqlString = String.format(sqlString, modCategory.getCategoryName(), modCategory.getModifyTime(), modCategory.getIcon(), sID);
+		 String sqlString = "UPDATE [Category] SET [Disabled]=1,[ModifyTime]=%s WHERE [CategoryId]=%s";
+		 sqlString = String.format(sqlString, modCategory.getModifyTime(),sID);
 
 		 // 如果是父种类，则检查其下是不是有子节点，有的话不让删，没有才能删，
 		 if (modCategory.getParentCategoryId() == 0)

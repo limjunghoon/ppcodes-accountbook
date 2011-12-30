@@ -7,9 +7,8 @@ public class ModCategory
 	  
    }
    
-   public ModCategory(Integer _CategoryId,Integer _ParentCategoryId,Integer _UserId,Integer _InOrOut,String _CategoryName,String _Icon,String _CreateTime,String _ModifyTime,Integer _Disabled,Integer _UseCount)
+   public ModCategory(Integer _ParentCategoryId,Integer _UserId,Integer _InOrOut,String _CategoryName,String _Icon,String _CreateTime,String _ModifyTime,Integer _Disabled,Integer _UseCount)
    {
-	  CategoryId=_CategoryId;
 	  ParentCategoryId=_ParentCategoryId;
 	  UserId=_UserId;
 	  InOrOut=_InOrOut;

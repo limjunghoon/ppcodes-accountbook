@@ -62,8 +62,8 @@ public  class Enums
   
   public enum InOrOut
   {
-	 Payout(0),
-	 Incoming(1);
+	 Incoming(1),	 
+	 Payout(2);
 	//构造器
 	 InOrOut(int value)
 		{

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.android.common.DBHelper;
 
@@ -129,8 +130,23 @@ public class DaoProfile extends DaoBase
 		 db = dbHelper.getWritableDatabase();
 		 int sId = super.getIdByName(db, updateField, tablaName, fieldName, name);
 		 String sqlString = "UPDATE [Profile] SET [%s]=%s,[ModifyTime]=%s WHERE [Disabled]=0 AND [UserId]=%s";
-		 sqlString = String.format(sqlString, updateField, sId, modProfile.getModifyTime(), modProfile.getUserId());
-		 db.execSQL(sqlString);
+		 if(modProfile.isCategory())
+		 {
+            if(modProfile.getCategoryType()==Enums.InOrOut.Incoming.getValue())//in
+            {
+    		   sqlString = String.format(sqlString, "InCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());
+            }
+            else if(modProfile.getCategoryType()==Enums.InOrOut.Payout.getValue())//out
+            {
+    		   sqlString = String.format(sqlString, "OutCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());	
+            }
+		 }
+		 else 
+		 {
+		   sqlString = String.format(sqlString, updateField, sId, modProfile.getModifyTime(), modProfile.getUserId());
+		 }
+		 
+db.execSQL(sqlString);
 	  }
 	  catch (Exception e)
 	  {
