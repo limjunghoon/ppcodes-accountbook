@@ -29,7 +29,37 @@ public class ModProfile
    private String CreateTime;
    private String ModifyTime;
    private Integer Disabled;
+   private boolean isCategory=false;
+   private Integer CategoryType;
    
+   
+   /**
+    * 1为In2为out
+    * @return
+    */
+   public Integer getCategoryType()
+   {
+      return CategoryType;
+   }
+   /**
+    *  1为In2为out
+    * @param categoryType
+    */
+   public void setCategoryType(Integer categoryType)
+   {
+      CategoryType = categoryType;
+   }
+
+   public boolean isCategory()
+   {
+      return isCategory;
+   }
+
+   public void setCategory(boolean _isCategory)
+   {
+	  isCategory = _isCategory;
+   }
+
 
 
    public Integer getId()

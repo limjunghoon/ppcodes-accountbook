@@ -56,22 +56,23 @@ public class DaoInitDataBase extends DaoBase
 		 		            " UNION ALL " +
 		 		            " SELECT "+UserId+",'招行工资卡',"+nowTime+","+nowTime+",0,0";
 		 //初始化Category
+		 //InOrOut值 2代表支出，1代表收入
 		 String sqlCategory = "INSERT INTO [Category] (ParentCategoryId,InOrOut,Icon,UserId,CategoryName,CreateTime,ModifyTime,Disabled,UseCount)" +
-	                        " SELECT 0,0,'icon_xcjt',"+UserId+",'交通支出',"+nowTime+","+nowTime+",0,0" +
+	                        " SELECT 0,2,'icon_xcjt',"+UserId+",'交通支出',"+nowTime+","+nowTime+",0,0" +
 	                        " UNION ALL " +            
-			                " SELECT 0,0,'icon_spjs',"+UserId+",'餐饮支出',"+nowTime+","+nowTime+",0,0" +
+			                " SELECT 0,2,'icon_spjs',"+UserId+",'餐饮支出',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
 		 		            " SELECT 0,1,'icon_jrbx',"+UserId+",'职业收入',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
 		 		            " SELECT 0,1,'icon_qtsr',"+UserId+",'其他收入',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
-	                        " SELECT 1,0,'icon_xcjt_dczc',"+UserId+",'公交支出',"+nowTime+","+nowTime+",0,0" +
+	                        " SELECT 1,2,'icon_xcjt_dczc',"+UserId+",'公交支出',"+nowTime+","+nowTime+",0,0" +
 	                        " UNION ALL " +            
-			                " SELECT 1,0,'icon_xcjt_ggjt',"+UserId+",'地铁支出',"+nowTime+","+nowTime+",0,0" +
+			                " SELECT 1,2,'icon_xcjt_ggjt',"+UserId+",'地铁支出',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
-		 		            " SELECT 2,0,'icon_spjs_sgls',"+UserId+",'中饭支出',"+nowTime+","+nowTime+",0,0" +
+		 		            " SELECT 2,2,'icon_spjs_sgls',"+UserId+",'中饭支出',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
-		 		            " SELECT 2,0,'icon_spjs_zwwc',"+UserId+",'晚饭支出',"+nowTime+","+nowTime+",0,0" +
+		 		            " SELECT 2,2,'icon_spjs_zwwc',"+UserId+",'晚饭支出',"+nowTime+","+nowTime+",0,0" +
 		 		            " UNION ALL " +
 	                        " SELECT 3,1,'icon_jrbx_xfss',"+UserId+",'工资收入',"+nowTime+","+nowTime+",0,0" +
 	                        " UNION ALL " +            
@@ -82,7 +83,7 @@ public class DaoInitDataBase extends DaoBase
 		 		            " SELECT 4,1,'icon_qtsr_zjsr',"+UserId+",'中奖所得',"+nowTime+","+nowTime+",0,0"; 
 		 //初始化Profile
 		 String sqlProfile = "INSERT INTO [Profile] ([UserId],[InCategoryId],[OutCategoryId],[BusinessId],[AccountId],[ProjectId],[CreateTime],[ModifyTime],[Disabled]) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)";
-		 sqlProfile=String.format(sqlProfile, UserId,7,9,1,1,1,nowTime,nowTime,0);
+		 sqlProfile=String.format(sqlProfile, UserId,9,7,1,1,1,nowTime,nowTime,0);
 	
 		 db = dbHelper.getWritableDatabase();
 		 db.beginTransaction();
