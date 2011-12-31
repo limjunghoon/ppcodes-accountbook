@@ -1,29 +1,25 @@
 package ppcodes.accountbook.app;
 
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ppcodes.accountbook.common.DataHelper;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.dao.DaoAccount;
 import ppcodes.accountbook.dao.DaoBusiness;
+import ppcodes.accountbook.dao.DaoCategory;
 import ppcodes.accountbook.dao.DaoProject;
 import ppcodes.accountbook.entity.model.ModAccount;
 import ppcodes.accountbook.entity.model.ModBusiness;
+import ppcodes.accountbook.entity.model.ModCategory;
 import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
 import ppcodes.android.common.gvImageAdapter;
-import android.R.bool;
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.sax.Element;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.View;
@@ -47,11 +43,67 @@ public class TmpSettingItemEdit extends Activity
    // 字段
    int SETTING_TYPE;
    int imgId;
-   
-   Session session;
+   String imgName;
    String itemName;
-   Dialogs dialogs;
+   
+   Session _session;
+   Session getSession()
+   {
+	  if(_session==null)
+		 _session=(Session)getApplicationContext();
+	  return _session;
+   }
 
+   Dialogs _dialogs;
+   Dialogs getDialogs()
+   {
+	  if(_dialogs==null)
+		 _dialogs=new Dialogs(this);
+	  return _dialogs;
+   }
+   
+   DaoBusiness _daoBusiness;
+   private DaoBusiness getDaoBusiness()
+   {
+		 if(_daoBusiness==null)
+		 {	
+			_daoBusiness=new DaoBusiness(this);
+		 }
+	     return _daoBusiness;
+   }
+   
+   DaoProject _daoProject;   
+   private DaoProject getDaoProject()
+   {
+		 if(_daoProject==null)
+		 {	
+			_daoProject=new DaoProject(this);
+		 }
+	     return _daoProject;
+   }
+   
+   DaoAccount _daoAccount;
+   private DaoAccount getDaoAccount()
+   {
+		 if(_daoAccount==null)
+		 {	
+			_daoAccount=new DaoAccount(this);
+		 }
+	     return _daoAccount;
+   }
+   
+   DaoCategory _daoCategory;
+   private DaoCategory getDaoCategory()
+   {
+		 if(_daoCategory==null)
+		 {	
+			_daoCategory=new DaoCategory(this);
+		 }
+	     return _daoCategory;
+   }
+
+   
+   
    void InitControls()
    {
 	 gvIcon=(GridView)findViewById(R.id.gvIcon_Act_Tmp_setting_item_edit);
@@ -65,6 +117,7 @@ public class TmpSettingItemEdit extends Activity
 	 
 	 edtName=(EditText)findViewById(R.id.edtName_Act_Tmp_setting_item_edit);
 	 edtName.setText(itemName);
+	 //将光标移动到字符串最后一位
 	 Editable mEditable=edtName.getText();
 	 Selection.setSelection(mEditable, mEditable.length());
 	 
@@ -81,75 +134,108 @@ public class TmpSettingItemEdit extends Activity
 	     public void onClick(View v)
 	     {
 	  	  // TODO Auto-generated method stub
-	      if(edtName.getText().toString().trim().equals(""))//不能为空
+	    	
+	      String sName=edtName.getText().toString().trim();
+	      
+	      if(sName.equals("")||sName==null)//不能为空
 	      {
-	    	 dialogs.ShowOKAlertDialog(getString(R.string.alert_tip), getString(R.string.alert_notBeEmpty));	
+	    	 getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip), getString(R.string.alert_notBeEmpty));	
 	      }
-		  else if (edtName.getText().toString().equals(itemName))//无更改直接返回
+	      
+		  else if (sName.equals(itemName)&&imgName.equals(getIntent().getStringExtra("img")))//无更改直接返回
 		  {
 			 finish();
 		  }
+	      
 	      else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 		  {
-			
+			 ModCategory modCategory=new ModCategory();
+			 modCategory.setCategoryName(sName);
+			 modCategory.setUserId(getSession().getUserId());
+			 modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modCategory.setIcon(imgName);
+			 
+			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
+			 {
+				finish();
+			 }
+			 else 
+			 {	
+				getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip),"种类"+getString(R.string.alert_existOrError));
+			 }
 		  }
+	      
 		  else if (SETTING_TYPE == Enums.ItemType.Payout.getValue())
 		  {
+			 ModCategory modCategory=new ModCategory();
+			 modCategory.setCategoryName(sName);
+			 modCategory.setUserId(getSession().getUserId());
+			 modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modCategory.setIcon(imgName);
 			 
+			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
+			 {
+				finish();
+			 }
+			 else 
+			 {	
+				getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip),"种类"+getString(R.string.alert_existOrError));
+			 }
 		  }
+	      
 		  else if (SETTING_TYPE == Enums.ItemType.Account.getValue())
 		  {
 			 ModAccount modAccount=new ModAccount();
-			 modAccount.setAccountName(edtName.getText().toString().trim());
+			 modAccount.setAccountName(sName);
 			 modAccount.setModifyTime(StringHelper.FormatDateTime(new Date()));
-			 modAccount.setUserId(session.getUserId());
+			 modAccount.setUserId(getSession().getUserId());
 			 
-			 DaoAccount daoAccount=new DaoAccount(TmpSettingItemEdit.this);
-			 if(daoAccount.UpdateAccountName(modAccount, itemName))
+			 if(getDaoAccount().UpdateAccountName(modAccount, itemName))
 			 {
 				finish();
 			 }
 			 else
 			 {
-				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"账户"+getString(R.string.alert_existOrError));
+				getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip),"账户"+getString(R.string.alert_existOrError));
 			 };
 		  }
+	      
 		  else if (SETTING_TYPE == Enums.ItemType.Project.getValue())
 		  {
 			 ModProject modProject=new ModProject();
-			 modProject.setProjectName(edtName.getText().toString().trim());
+			 modProject.setProjectName(sName);
 			 modProject.setModifyTime(StringHelper.FormatDateTime(new Date()));
-			 modProject.setUserId(session.getUserId());
+			 modProject.setUserId(getSession().getUserId());
 			 
-			 DaoProject daoProject=new DaoProject(TmpSettingItemEdit.this);
-			 if(daoProject.UpdateProjectName(modProject, itemName))
+			 if(getDaoProject().UpdateProjectName(modProject, itemName))
 			 {
 				finish();
 			 }
 			 else
 			 {
-				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"项目"+getString(R.string.alert_existOrError));
+				getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip),"项目"+getString(R.string.alert_existOrError));
 			 }
 		  }
+	      
 		  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
-			 modBusiness.setBusinessName(edtName.getText().toString().trim());
+			 modBusiness.setBusinessName(sName);
 			 modBusiness.setModifyTime(StringHelper.FormatDateTime(new Date()));
-			 modBusiness.setUserId(session.getUserId());
+			 modBusiness.setUserId(getSession().getUserId());
 			 
-			 DaoBusiness daoBusiness=new DaoBusiness(TmpSettingItemEdit.this);
-			 if(daoBusiness.UpdateBusinessName(modBusiness, itemName))
+			 if(getDaoBusiness().UpdateBusinessName(modBusiness, itemName))
 			 {
 				finish();
 			 }
 			 else
 			 {
-				dialogs.ShowOKAlertDialog(getString(R.string.alert_tip),"商家"+getString(R.string.alert_existOrError));
+				getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip),"商家"+getString(R.string.alert_existOrError));
 			 }
 	      }	 
 	     }
 	  });
+
    }
    
    void SetIconState()
@@ -203,6 +289,8 @@ public class TmpSettingItemEdit extends Activity
 			// TODO Auto-generated method stub
 		   ImageView imgView=(ImageView)gItem;
 		   imgCurrent.setImageDrawable(imgView.getDrawable());
+		   //获得图片的名称
+		   imgName=imgView.getTag()==null?imgName:imgView.getTag().toString();
 		 } 
 	  });
    }
@@ -213,10 +301,12 @@ public class TmpSettingItemEdit extends Activity
 	  // TODO Auto-generated method stub
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.act_tmp_setting_item_edit);
+	  
 	  SETTING_TYPE = getIntent().getIntExtra(Enums.ItemTypeValue, 0);
 	  itemName=getIntent().getStringExtra("name");
-	  dialogs=new Dialogs(TmpSettingItemEdit.this);
-	  session=(Session)getApplicationContext();
+	  imgName=getIntent().getStringExtra("img");
+      imgId=DataHelper.GetDrawIdByName(imgName);
+      
 	  InitControls();
 	  InitControlsListener();
           
@@ -231,41 +321,5 @@ public class TmpSettingItemEdit extends Activity
 				  imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 			   }
 			}, 300);
-
-//      Class<?> cl=R.drawable.class;
-//      Field ff=null;
-//	  try
-//	  {
-//		 ff=cl.getField("icon_jltx_zjf");
-//	  }
-//	  catch (SecurityException e)
-//	  {
-//		 // TODO Auto-generated catch block
-//		e.printStackTrace();
-//	  }
-//	  catch (NoSuchFieldException e)
-//	  {
-//		 // TODO Auto-generated catch block
-//		e.printStackTrace();
-//	  }
-//      int aa=0;
-//      try
-//	  {
-//		 aa=ff.getInt(cl);
-//	  }
-//	  catch (IllegalArgumentException e)
-//	  {
-//		 // TODO Auto-generated catch block
-//		e.printStackTrace();
-//	  }
-//	  catch (IllegalAccessException e)
-//	  {
-//		 // TODO Auto-generated catch block
-//		e.printStackTrace();
-//	  }
-//      
-//	  imgCurrent.setImageResource(aa);
-
-	 
    }
 }

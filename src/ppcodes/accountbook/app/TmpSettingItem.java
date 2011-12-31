@@ -1,6 +1,5 @@
 package ppcodes.accountbook.app;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,17 +25,22 @@ import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
-import android.R.integer;
+import ppcodes.android.common.gvImageAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -47,10 +51,11 @@ public class TmpSettingItem extends Activity
    // 控件定义
    private TextView txtTitle;
    private ListView listView;
-   private ImageView imgNew;
+   private ImageButton imgNew;
    private EditText edtNewItem;
    private Button btnNewItem;
-
+   
+   //属性
    Dialogs _dialogs;
    private Dialogs getDialogs()
    {
@@ -116,23 +121,23 @@ public class TmpSettingItem extends Activity
 		 }
 	     return _daoCategory;
    }
-
+   
    // 字段
    int SETTING_TYPE;
    boolean IS_PARENT;
    String PARENT_NAME;
    int CATEGORY_TYPE=999;
+   String imgName="icon_category_default";
   
    void InitControls()
    {
 	  listView = (ListView) findViewById(R.id.listView_Act_Tmp_setting_item);
-	  imgNew = (ImageView) findViewById(R.id.imgNew_Act_Tmp_setting);
+	  imgNew = (ImageButton) findViewById(R.id.btnNewImg_Act_Tmp_setting);
 	  edtNewItem = (EditText) findViewById(R.id.edtNewItem_Act_Tmp_setting);
 	  edtNewItem.clearFocus();
 	  btnNewItem = (Button) findViewById(R.id.btnNewItem_Act_Tmp_setting);
 	  txtTitle = (TextView) findViewById(R.id.txtTitle_Act_Tmp_setting);
 	  txtTitle.setText(getIntent().getStringExtra("TypeName"));
-
    }
 
    void InitControlsListener()
@@ -147,6 +152,35 @@ public class TmpSettingItem extends Activity
 		 }
 	  });
 
+	  imgNew.setOnClickListener(new OnClickListener()
+	  {
+	     @Override
+	     public void onClick(View v)
+	     {
+	  	  // TODO Auto-generated method stub
+	      //显示一个图标的列表供选择
+	    	LayoutInflater inflater = getLayoutInflater();
+	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview,(ViewGroup)findViewById(R.id.gvImage_dialog));
+	  	    gvImageAdapter gvAdapter=new gvImageAdapter(TmpSettingItem.this);
+//	  	    gvImg.setAdapter(gvAdapter);
+//	  	    gvImg.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//		    {		 @Override
+//			  public void onItemClick(AdapterView<?> gView, View gItem, int position, long index)
+//			  {
+//				// TODO Auto-generated method stub
+//			   ImageView imgView=(ImageView)gItem;
+//			   imgNew.setImageDrawable(imgView.getDrawable());
+//			   //获得图片的名称
+//			   imgName=imgView.getTag()==null?imgName:imgView.getTag().toString();
+//			   getDialogs().setDialogDismiss();
+//			 } 
+//		  });
+//	    	new AlertDialog.Builder(TmpSettingItem.this).setTitle("单击一个图标以选择")
+//	    	.setView(gvImg).show();
+//	  	    getDialogs().ShowCustomViewDialog("单击一个图标以选择", gvImg);
+	     }
+	  });
+	  
 	  listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 	  {
 		 @Override
@@ -171,6 +205,7 @@ public class TmpSettingItem extends Activity
 	  });
    }
 
+   //加载界面数据
    void LoadSetting()
    {
 	  if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
@@ -178,14 +213,14 @@ public class TmpSettingItem extends Activity
 		 imgNew.setVisibility(View.VISIBLE);
 		 if (IS_PARENT)
 		 {
-			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllIncomingCategory(), R.layout.listview_setting_item_details, new String[] { "name","img" },
-				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details });
+			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllIncomingCategory(), R.layout.listview_setting_item_details, new String[] { "name","img","imgName" },
+				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details,R.id.txtImgName_listview_setting_item_details });
 			 listView.setAdapter(sAdapter);
 		 }
 		 else
 		 {
-			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllIncomingChildCategory(PARENT_NAME), R.layout.listview_setting_item_details, new String[] { "name","img" },
-				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details });
+			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllIncomingChildCategory(PARENT_NAME), R.layout.listview_setting_item_details, new String[] { "name","img","imgName"  },
+				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details,R.id.txtImgName_listview_setting_item_details });
 			 listView.setAdapter(sAdapter);
 		 }
 	  }
@@ -195,14 +230,14 @@ public class TmpSettingItem extends Activity
 		 imgNew.setVisibility(View.VISIBLE);
 		 if (IS_PARENT)
 		 {
-			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllPayoutCategory(), R.layout.listview_setting_item_details, new String[] { "name","img" },
-				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details });
+			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllPayoutCategory(), R.layout.listview_setting_item_details, new String[] { "name","img","imgName"  },
+				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details,R.id.txtImgName_listview_setting_item_details });
 			 listView.setAdapter(sAdapter);
 		 }
 		 else
 		 {
-			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllPayoutChildCategory(PARENT_NAME), R.layout.listview_setting_item_details, new String[] { "name","img" },
-				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details });
+			 SimpleAdapter sAdapter = new SimpleAdapter(TmpSettingItem.this, getAllPayoutChildCategory(PARENT_NAME), R.layout.listview_setting_item_details, new String[] { "name","img","imgName"  },
+				   new int[] { R.id.txtItemtype_listview_setting_item_details,R.id.img_listview_setting_item_details,R.id.txtImgName_listview_setting_item_details });
 			 listView.setAdapter(sAdapter);
 		 }
 	  }
@@ -230,23 +265,9 @@ public class TmpSettingItem extends Activity
 			   new int[] { R.id.txtItemtype_listview_setting_item_details });
 		 listView.setAdapter(sAdapter);
 	  }
-	  
-//	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
-//	  {
-//
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.OtherSetting.getValue())
-//	  {
-//
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.About.getValue())
-//	  {
-//
-//	  }
    }
 
+   //添加新项目
    void AddNewItem()
    {
 	  if (edtNewItem.getText().toString().equals(""))
@@ -336,25 +357,12 @@ public class TmpSettingItem extends Activity
 			getDialogs().ShowOKAlertDialog(getString(R.string.alert_tip), "商家" + getString(R.string.alert_existOrError));
 		 }
 	  }
-//	  // 数据管理
-//	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
-//	  {
-//
-//	  }
-//	  // 其他设置
-//	  else if (SETTING_TYPE == Enums.ItemType.OtherSetting.getValue())
-//	  {
-//
-//	  }
-//	  // 关于
-//	  else if (SETTING_TYPE == Enums.ItemType.About.getValue())
-//	  {
-//
-//	  }
+
 	  edtNewItem.setText("");
 	  edtNewItem.clearFocus();
    }
 
+   //单击设置为默认事件
    void SetDefault(String sName)
    {
 	  ModProfile modProfile = new ModProfile();
@@ -422,23 +430,9 @@ public class TmpSettingItem extends Activity
 		 getDaoProfile().UpdateProfile(modProfile, DicBusiness.TableName, DicBusiness.BusinessName, sName, DicBusiness.BusinessId);
 		 finish();
 	  }
-	  
-//	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
-//	  {
-//		 finish();
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.OtherSetting.getValue())
-//	  {
-//		 finish();
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.About.getValue())
-//	  {
-//	     finish();
-//	  }
    }
 
+   //长按项目显示的菜单
    void ShowEditMenu(View itemView)
    {
 	  final View itemView2 = itemView;
@@ -455,8 +449,9 @@ public class TmpSettingItem extends Activity
 			   // TODO Auto-generated method stub
 			   TextView txtName = (TextView) itemView2.findViewById(R.id.txtItemtype_listview_setting_item_details);
 			   String sName = txtName.getText().toString();
-               ImageView img=(ImageView)itemView2.findViewById(R.id.img_listview_setting_item_details);
-			    
+			   
+			   TextView txtImgNameTextView=(TextView)itemView2.findViewById(R.id.txtImgName_listview_setting_item_details);
+			   String imgName=txtImgNameTextView.getText().toString();
 			   switch (which)
 			   {
 				  case 0:// 编辑
@@ -465,7 +460,7 @@ public class TmpSettingItem extends Activity
 					 intent.setClass(TmpSettingItem.this, TmpSettingItemEdit.class);
 					 intent.putExtra("name", sName);
 					 intent.putExtra(Enums.ItemTypeValue, Enums.ItemType.Incoming.getValue());
-					 intent.putExtra("img", "");
+					 intent.putExtra("img",imgName);
 					 if(IS_PARENT)
 					 {
 						intent.putExtra("IsParent", true);
@@ -501,11 +496,11 @@ public class TmpSettingItem extends Activity
 		 };
 		 if(IS_PARENT)
 		 {
-		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete), getString(R.string.c_setDefault) }, onClickListener);
+		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete)}, onClickListener);
 		 }
 		 else
 		 {	   
-		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete)}, onClickListener);
+		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete), getString(R.string.c_setDefault) }, onClickListener);
 		 }
 	  }
 	  
@@ -521,8 +516,9 @@ public class TmpSettingItem extends Activity
 			   // TODO Auto-generated method stub
 			   TextView txtName = (TextView) itemView2.findViewById(R.id.txtItemtype_listview_setting_item_details);
 			   String sName = txtName.getText().toString();
-               ImageView img=(ImageView)itemView2.findViewById(R.id.img_listview_setting_item_details);
-				
+              
+			   TextView txtImgNameTextView=(TextView)itemView2.findViewById(R.id.txtImgName_listview_setting_item_details);
+			   String imgName=txtImgNameTextView.getText().toString();
 			   switch (which)
 			   {
 				  case 0:// 编辑
@@ -531,7 +527,7 @@ public class TmpSettingItem extends Activity
 					 intent.setClass(TmpSettingItem.this, TmpSettingItemEdit.class);
 					 intent.putExtra("name", sName);
 					 intent.putExtra(Enums.ItemTypeValue, Enums.ItemType.Payout.getValue());
-					 intent.putExtra("img", "");
+					 intent.putExtra("img", imgName);
 					 if(IS_PARENT)
 					 {
 						intent.putExtra("IsParent", true);
@@ -567,11 +563,11 @@ public class TmpSettingItem extends Activity
 		 };
 		 if(IS_PARENT)
 		 {
-		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete), getString(R.string.c_setDefault) }, onClickListener);
+		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete)}, onClickListener);
 		 }
 		 else
 		 {	   
-		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete)}, onClickListener);
+		   getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete), getString(R.string.c_setDefault) }, onClickListener);
 		 }
 	  }
 	  
@@ -724,21 +720,6 @@ public class TmpSettingItem extends Activity
 		 };
 		 getDialogs().ShowItemsDialog(new String[] { getString(R.string.c_edit), getString(R.string.c_delete), getString(R.string.c_setDefault) }, onClickListener);
 	  }
-	  
-//	  else if (SETTING_TYPE == Enums.ItemType.DataManage.getValue())
-//	  {
-//
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.OtherSetting.getValue())
-//	  {
-//
-//	  }
-//	  
-//	  else if (SETTING_TYPE == Enums.ItemType.About.getValue())
-//	  {
-//
-//	  }
    }
 
 
@@ -820,6 +801,7 @@ public class TmpSettingItem extends Activity
 			map = new HashMap<String, Object>();
 			map.put("name", bName[0]);
 			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
+			map.put("imgName", bName[1]);
 			list.add(map);
 		 }
 	  }
@@ -850,6 +832,7 @@ public class TmpSettingItem extends Activity
 			map = new HashMap<String, Object>();
 			map.put("name", bName[0]);
 			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
+			map.put("imgName", bName[1]);
 			list.add(map);
 		 }
 	  }
@@ -880,6 +863,7 @@ public class TmpSettingItem extends Activity
 			map = new HashMap<String, Object>();
 			map.put("name", bName[0]);
 			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
+			map.put("imgName", bName[1]);
 			list.add(map);
 		 }
 	  }
@@ -910,6 +894,7 @@ public class TmpSettingItem extends Activity
 			map = new HashMap<String, Object>();
 			map.put("name", bName[0]);
 			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
+			map.put("imgName", bName[1]);
 			list.add(map);
 		 }
 	  }

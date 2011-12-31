@@ -11,6 +11,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class Dialogs
 {
@@ -86,6 +88,20 @@ public class Dialogs
 	  builder.create().show();
    }
 
+   public void ShowCustomViewDialog(String title, View view)
+   {
+	  mDialog = new ProgressDialog(context);
+	  if(title==null||title.equals(""))
+	  {
+		 mDialog.setView(view);
+	  }
+	  else 
+	  {
+		 mDialog.setTitle(title);
+	  }
+	  mDialog.show();
+   }
+   
    /**
     * 创建一个没有标题栏的loading窗口
     * @param message 信息
@@ -107,7 +123,7 @@ public class Dialogs
 		 mDialog.dismiss();
 	  }
    }
-
+   
    protected void CreateLoadingDialog(int id, String message)
    {
 	  mDialog = new ProgressDialog(context);

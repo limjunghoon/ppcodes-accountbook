@@ -19,4 +19,9 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
+    <TextView
+        android:id="@+id/txtImgName_listview_setting_item_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" android:visibility="gone"/>
 </LinearLayout>
