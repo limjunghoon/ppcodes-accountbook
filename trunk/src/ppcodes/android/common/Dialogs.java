@@ -29,6 +29,7 @@ public class Dialogs
    {
 
    }
+
    AlertDialog dialog;
    AlertDialog.Builder builder;
    ProgressDialog mDialog;
@@ -42,8 +43,11 @@ public class Dialogs
 
    /**
     * 创建一个带有OK按钮的提示窗
-    * @param title 标题
-    * @param message 信息
+    * 
+    * @param title
+    *           标题
+    * @param message
+    *           信息
     */
    public void ShowOKAlertDialog(String title, String message)
    {
@@ -63,9 +67,13 @@ public class Dialogs
 
    /**
     * 创建一个带有OK,Cancel按钮的提示窗
-    * @param title 标题
-    * @param message 信息
-    * @param OKButtonOnClickListener OK按钮的监听器
+    * 
+    * @param title
+    *           标题
+    * @param message
+    *           信息
+    * @param OKButtonOnClickListener
+    *           OK按钮的监听器
     */
    public void ShowOKCancelAlertDialog(String title, String message, OnClickListener OKButtonOnClickListener)
    {
@@ -85,43 +93,55 @@ public class Dialogs
 	  builder.create().show();
    }
 
-   public void ShowItemsDialog(String[] items,DialogInterface.OnClickListener onClickListener)
+   public void ShowItemsDialog(String[] items, DialogInterface.OnClickListener onClickListener)
    {
 	  builder = new AlertDialog.Builder(context);
-	  builder.setItems(items,onClickListener);
+	  builder.setItems(items, onClickListener);
 	  builder.create().show();
    }
 
-   public void ShowCustomViewDialog(String title, View view,int height,int width)
+   /**
+    * 
+    * @param title 标题，如果没有则留null或者""
+    * @param view 需要加载的自定义布局
+    * @param height 高度占整个屏幕的百分比 如90代表90%
+    * @param width  宽度占整个屏幕的百分比
+    */
+   public void ShowCustomViewDialog(String title, View view, int height, int width)
    {
 	  dialog = new AlertDialog.Builder(context).create();
-	  if(title==null||title.equals(""))
+	  if (title == null || title.equals(""))
 	  {
 		 dialog.setView(view);
 	  }
-	  else 
+	  else
 	  {
 		 dialog.setTitle(title);
 		 dialog.setView(view);
 	  }
 	  dialog.show();
-	  DisplayMetrics dm=new DisplayMetrics();
-	  Activity act=(Activity)context;
+	  DisplayMetrics dm = new DisplayMetrics();
+	  Activity act = (Activity) context;
 	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
 	  WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-	  params.width = dm.widthPixels*width/100;
-	  params.height = dm.heightPixels*height/100 ;
+	  params.width = dm.widthPixels * width / 100;
+	  params.height = dm.heightPixels * height / 100;
 	  dialog.getWindow().setAttributes(params);
    }
-   
+
    public void dismissAlertDialog()
    {
-	  dialog.dismiss();
+	  if (dialog.isShowing())
+	  {
+		 dialog.dismiss();
+	  }
    }
-   
+
    /**
     * 创建一个没有标题栏的loading窗口
-    * @param message 信息
+    * 
+    * @param message
+    *           信息
     */
    public void ShowLoadingDialogNoTitle(String message)
    {
@@ -140,7 +160,7 @@ public class Dialogs
 		 mDialog.dismiss();
 	  }
    }
-   
+
    protected void CreateLoadingDialog(int id, String message)
    {
 	  mDialog = new ProgressDialog(context);
