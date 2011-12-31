@@ -28,12 +28,11 @@
         android:layout_height="wrap_content"
         android:background="@color/LightBrown"
         android:padding="10dip" >
-        <ImageView
-            android:id="@+id/imgNew_Act_Tmp_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollY="3dip"
-            android:src="@android:drawable/ic_menu_gallery" />
+        <ImageButton
+            android:id="@+id/btnNewImg_Act_Tmp_setting"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:src="@drawable/icon_category_default"/>
         <EditText
             android:id="@+id/edtNewItem_Act_Tmp_setting"
             android:layout_width="wrap_content"

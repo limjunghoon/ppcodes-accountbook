@@ -260,7 +260,7 @@ public class DaoCategory extends DaoBase
    }
 
    /**
-    * 更新种类 需要赋值CategoryName,ModifyTime,UserId,InOrOut,Icon,
+    * 更新种类 需要赋值CategoryName,ModifyTime,UserId,Icon,
     * oldname为之前的值，categoryname为之后的值
     * 
     * @param modBusiness
@@ -272,8 +272,8 @@ public class DaoCategory extends DaoBase
 	  try
 	  {
 		 db = dbHelper.getWritableDatabase();
-		 cursor = db.rawQuery("Select count(*) as num From [Category] Where [CategoryName]=? And [UserId]=? And [Disabled]=0",
-			   new String[] { modCategory.getCategoryName(), String.valueOf(modCategory.getUserId()), String.valueOf(modCategory.getInOrOut()) });
+		 cursor = db.rawQuery("Select count(*) as num From [Category] Where [CategoryName]=? And [UserId]=? And [Icon]=? And [Disabled]=0",
+			   new String[] { modCategory.getCategoryName(), String.valueOf(modCategory.getUserId()),modCategory.getIcon()});
 		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
 		 {
 			do
@@ -286,7 +286,7 @@ public class DaoCategory extends DaoBase
 			} while (cursor.moveToNext());
 
 			int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, OldName);
-			String sqlString = "UPDATE [Category] SET [CategoryName]='%s',[ModifyTime]=%s,[Icon]=%s WHERE [Disabled]=0 AND [CategoryId]=%s";
+			String sqlString = "UPDATE [Category] SET [CategoryName]='%s',[ModifyTime]=%s,[Icon]='%s' WHERE [Disabled]=0 AND [CategoryId]=%s";
 			sqlString = String.format(sqlString, modCategory.getCategoryName(), modCategory.getModifyTime(), modCategory.getIcon(), sID);
 			db.execSQL(sqlString);
 			return true;
