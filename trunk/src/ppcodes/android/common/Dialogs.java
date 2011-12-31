@@ -6,13 +6,17 @@
 
 package ppcodes.android.common;
 
+import android.R.integer;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 public class Dialogs
 {
@@ -25,7 +29,7 @@ public class Dialogs
    {
 
    }
-
+   AlertDialog dialog;
    AlertDialog.Builder builder;
    ProgressDialog mDialog;
    Context context;
@@ -88,19 +92,31 @@ public class Dialogs
 	  builder.create().show();
    }
 
-   public void ShowCustomViewDialog(String title, View view)
+   public void ShowCustomViewDialog(String title, View view,int height,int width)
    {
-	  builder = new AlertDialog.Builder(context);
+	  dialog = new AlertDialog.Builder(context).create();
 	  if(title==null||title.equals(""))
 	  {
-		 builder.setView(view);
+		 dialog.setView(view);
 	  }
 	  else 
 	  {
-		 builder.setTitle(title);
-		 builder.setView(view);
+		 dialog.setTitle(title);
+		 dialog.setView(view);
 	  }
-	  builder.create().show();
+	  dialog.show();
+	  DisplayMetrics dm=new DisplayMetrics();
+	  Activity act=(Activity)context;
+	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+	  WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+	  params.width = dm.widthPixels*width/100;
+	  params.height = dm.heightPixels*height/100 ;
+	  dialog.getWindow().setAttributes(params);
+   }
+   
+   public void dismissAlertDialog()
+   {
+	  dialog.dismiss();
    }
    
    /**
