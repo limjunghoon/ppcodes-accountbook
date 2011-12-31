@@ -90,16 +90,17 @@ public class Dialogs
 
    public void ShowCustomViewDialog(String title, View view)
    {
-	  mDialog = new ProgressDialog(context);
+	  builder = new AlertDialog.Builder(context);
 	  if(title==null||title.equals(""))
 	  {
-		 mDialog.setView(view);
+		 builder.setView(view);
 	  }
 	  else 
 	  {
-		 mDialog.setTitle(title);
+		 builder.setTitle(title);
+		 builder.setView(view);
 	  }
-	  mDialog.show();
+	  builder.create().show();
    }
    
    /**
