@@ -27,7 +27,6 @@ import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
 import ppcodes.android.common.gvImageAdapter;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -160,7 +158,7 @@ public class TmpSettingItem extends Activity
 	  	  // TODO Auto-generated method stub
 	      //显示一个图标的列表供选择
 	    	LayoutInflater inflater = getLayoutInflater();
-	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview1,null);
+	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview,null);
 	    	GridView gvImg=(GridView)layout.findViewById(R.id.gvImage_dialog);
 	  	    gvImageAdapter gvAdapter=new gvImageAdapter(TmpSettingItem.this);
 	  	    gvImg.setAdapter(gvAdapter);
@@ -173,12 +171,10 @@ public class TmpSettingItem extends Activity
 			   imgNew.setImageDrawable(imgView.getDrawable());
 			   //获得图片的名称
 			   imgName=imgView.getTag()==null?imgName:imgView.getTag().toString();
-//			   getDialogs().setDialogDismiss();
+			   getDialogs().dismissAlertDialog();
 			 } 
 		  });
-//	    	new AlertDialog.Builder(TmpSettingItem.this).setTitle("单击一个图标以选择")
-//	    	.setView(gvImg).show();
-	  	    getDialogs().ShowCustomViewDialog("单击一个图标以选择", gvImg);
+	  	  getDialogs().ShowCustomViewDialog("单击一个图标以选择", gvImg,70,85);
 	     }
 	  });
 	  
@@ -278,7 +274,7 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加收入种类
 	  else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 	  {
-		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Incoming.getValue(), edtNewItem.getText().toString(), "", StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0); 
+		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Incoming.getValue(), edtNewItem.getText().toString(), imgName, StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0); 
         
 		if(IS_PARENT)
         {
@@ -301,7 +297,7 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加支出种类
 	  else if (SETTING_TYPE == Enums.ItemType.Payout.getValue())
 	  {
-		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Payout.getValue(), edtNewItem.getText().toString(), "", StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0);  
+		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Payout.getValue(), edtNewItem.getText().toString(), imgName, StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0);  
 	    if(IS_PARENT)
 	    {
 	      modCategory.setParentCategoryId(0);
