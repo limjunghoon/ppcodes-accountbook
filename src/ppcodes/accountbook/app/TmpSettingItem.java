@@ -160,24 +160,25 @@ public class TmpSettingItem extends Activity
 	  	  // TODO Auto-generated method stub
 	      //显示一个图标的列表供选择
 	    	LayoutInflater inflater = getLayoutInflater();
-	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview,(ViewGroup)findViewById(R.id.gvImage_dialog));
+	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview1,null);
+	    	GridView gvImg=(GridView)layout.findViewById(R.id.gvImage_dialog);
 	  	    gvImageAdapter gvAdapter=new gvImageAdapter(TmpSettingItem.this);
-//	  	    gvImg.setAdapter(gvAdapter);
-//	  	    gvImg.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//		    {		 @Override
-//			  public void onItemClick(AdapterView<?> gView, View gItem, int position, long index)
-//			  {
-//				// TODO Auto-generated method stub
-//			   ImageView imgView=(ImageView)gItem;
-//			   imgNew.setImageDrawable(imgView.getDrawable());
-//			   //获得图片的名称
-//			   imgName=imgView.getTag()==null?imgName:imgView.getTag().toString();
+	  	    gvImg.setAdapter(gvAdapter);
+	  	    gvImg.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		    { @Override
+			  public void onItemClick(AdapterView<?> gView, View gItem, int position, long index)
+			  {
+				// TODO Auto-generated method stub
+			   ImageView imgView=(ImageView)gItem;
+			   imgNew.setImageDrawable(imgView.getDrawable());
+			   //获得图片的名称
+			   imgName=imgView.getTag()==null?imgName:imgView.getTag().toString();
 //			   getDialogs().setDialogDismiss();
-//			 } 
-//		  });
+			 } 
+		  });
 //	    	new AlertDialog.Builder(TmpSettingItem.this).setTitle("单击一个图标以选择")
 //	    	.setView(gvImg).show();
-//	  	    getDialogs().ShowCustomViewDialog("单击一个图标以选择", gvImg);
+	  	    getDialogs().ShowCustomViewDialog("单击一个图标以选择", gvImg);
 	     }
 	  });
 	  
