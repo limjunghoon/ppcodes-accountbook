@@ -2,9 +2,7 @@ package ppcodes.accountbook.common;
 
 import java.lang.reflect.Field;
 
-import android.R.integer;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import ppcodes.accountbook.app.R;
 
 public class DataHelper extends Activity

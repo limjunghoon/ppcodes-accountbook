@@ -6,7 +6,6 @@
 
 package ppcodes.android.common;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -15,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 public class Dialogs
