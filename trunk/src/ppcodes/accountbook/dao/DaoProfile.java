@@ -3,12 +3,14 @@ package ppcodes.accountbook.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.entity.model.ModProfile;
+import ppcodes.accountbook.entity.model.ModProfileForAdd;
 import ppcodes.android.common.DBHelper;
 
 public class DaoProfile extends DaoBase
@@ -52,6 +54,90 @@ public class DaoProfile extends DaoBase
    // }
 
    /**
+    * 返回值的顺序为0父类别，1子类别，2项目，3账户，4商家
+    * 
+    * @param UserId
+    * @return
+    */
+   public ModProfileForAdd GetProfileNameByUserId2(int UserId, int InOrOut)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  try
+	  {
+
+		 db = dbHelper.getReadableDatabase();
+		 String sqlString = "Select b.[CategoryName] as ParentCategoryName,b.[CategoryId] as ParentCategoryId," + 
+		    "c.[CategoryName] as CategoryName,c.[CategoryId] as CategoryId, "+ 
+		    "d.[ProjectName], d.[ProjectId]," + 
+		    "e.[AccountName], e.[AccountId]," + 
+		    "f.[BusinessName],f.[BusinessName]," + 
+		    "a.[UserId]" + 
+		   " From [Profile] a";
+		 if (InOrOut == Enums.InOrOut.Incoming.getValue())
+		 {
+			sqlString += " Inner Join Category c On c.CategoryId=a.InCategoryId" + " Inner Join Category b On c.ParentCategoryId=b.CategoryId";
+		 }
+		 else if (InOrOut == Enums.InOrOut.Payout.getValue())
+		 {
+			sqlString += " Inner Join Category c On c.CategoryId=a.OutCategoryId" + " Inner Join Category b On c.ParentCategoryId=b.CategoryId";
+		 }
+		 sqlString += " Inner Join Project d On d.ProjectId=a.ProjectId" + " Inner Join Account e On e.AccountId=a.AccountId" + " Inner Join Business f On f.BusinessId=a.BusinessId"
+			   + " Where a.[UserId]=? And a.[Disabled]=0";
+
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId) });
+
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
+		 {
+			ModProfileForAdd modProfileForAdd;
+			do
+			{
+			   modProfileForAdd = new ModProfileForAdd();
+
+			   modProfileForAdd.setParentCategoryName(cursor.getString(0));
+			   modProfileForAdd.setParentCategoryId(cursor.getInt(1));
+
+			   modProfileForAdd.setCategoryName(cursor.getString(2));
+			   modProfileForAdd.setCategoryId(cursor.getInt(3));
+
+			   modProfileForAdd.setProjectName(cursor.getString(4));
+			   modProfileForAdd.setProjectId(cursor.getInt(5));
+
+			   modProfileForAdd.setAccountName(cursor.getString(6));
+			   modProfileForAdd.setAccountId(cursor.getInt(7));
+
+			   modProfileForAdd.setBusinessName(cursor.getString(8));
+			   modProfileForAdd.setBusinessId(cursor.getInt(9));
+			   
+			} while (cursor.moveToNext());
+			return modProfileForAdd;
+		 }
+		 else
+		 {
+			return null;// cursor为空，表示出了异常
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 Log.e("ERROR", e.getMessage() + "DaoBusiness.GetAllBusinessByUserId（）");
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;// 默认为存在防止多重添加
+   }
+
+   /**
     * 返回值的顺序为0收入，1支出，2项目，3账户，4商家
     * 
     * @param UserId
@@ -65,14 +151,9 @@ public class DaoProfile extends DaoBase
 	  {
 
 		 db = dbHelper.getReadableDatabase();
-		 String sqlString = "Select b.[CategoryName] as CategoryIn,c.[CategoryName] as CategoryOut,d.[ProjectName],e.[AccountName],f.[BusinessName],a.[UserId]" + 
-		                   " From [Profile] a"+ 
-			               " Inner Join Category b On b.CategoryId=a.InCategoryId" + 
-		                   " Inner Join Category c On c.CategoryId=a.OutCategoryId" + 
-			               " Inner Join Project d On d.ProjectId=a.ProjectId" + 
-		                   " Inner Join Account e On e.AccountId=a.AccountId" + 
-			               " Inner Join Business f On f.BusinessId=a.BusinessId" + 
-		                   " Where a.[UserId]=? And a.[Disabled]=0";
+		 String sqlString = "Select b.[CategoryName] as CategoryIn,c.[CategoryName] as CategoryOut,d.[ProjectName],e.[AccountName],f.[BusinessName],a.[UserId]" + " From [Profile] a"
+			   + " Inner Join Category b On b.CategoryId=a.InCategoryId" + " Inner Join Category c On c.CategoryId=a.OutCategoryId" + " Inner Join Project d On d.ProjectId=a.ProjectId"
+			   + " Inner Join Account e On e.AccountId=a.AccountId" + " Inner Join Business f On f.BusinessId=a.BusinessId" + " Where a.[UserId]=? And a.[Disabled]=0";
 
 		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId) });
 
@@ -130,23 +211,23 @@ public class DaoProfile extends DaoBase
 		 db = dbHelper.getWritableDatabase();
 		 int sId = super.getIdByName(db, updateField, tablaName, fieldName, name);
 		 String sqlString = "UPDATE [Profile] SET [%s]=%s,[ModifyTime]=%s WHERE [Disabled]=0 AND [UserId]=%s";
-		 if(modProfile.isCategory())
+		 if (modProfile.isCategory())
 		 {
-            if(modProfile.getCategoryType()==Enums.InOrOut.Incoming.getValue())//in
-            {
-    		   sqlString = String.format(sqlString, "InCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());
-            }
-            else if(modProfile.getCategoryType()==Enums.InOrOut.Payout.getValue())//out
-            {
-    		   sqlString = String.format(sqlString, "OutCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());	
-            }
+			if (modProfile.getCategoryType() == Enums.InOrOut.Incoming.getValue())// in
+			{
+			   sqlString = String.format(sqlString, "InCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());
+			}
+			else if (modProfile.getCategoryType() == Enums.InOrOut.Payout.getValue())// out
+			{
+			   sqlString = String.format(sqlString, "OutCategoryId", sId, modProfile.getModifyTime(), modProfile.getUserId());
+			}
 		 }
-		 else 
+		 else
 		 {
-		   sqlString = String.format(sqlString, updateField, sId, modProfile.getModifyTime(), modProfile.getUserId());
+			sqlString = String.format(sqlString, updateField, sId, modProfile.getModifyTime(), modProfile.getUserId());
 		 }
-		 
-db.execSQL(sqlString);
+
+		 db.execSQL(sqlString);
 	  }
 	  catch (Exception e)
 	  {

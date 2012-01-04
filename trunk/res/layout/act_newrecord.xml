@@ -6,7 +6,7 @@
     <GridView
         android:id="@+id/gvTab_Act_newrecord"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
     </GridView>
     <FrameLayout
         android:id="@+id/container_Act_newrecord"
@@ -31,7 +31,7 @@
                     android:text="金额："
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                 <EditText
-                    android:id="@+id/editText1"
+                    android:id="@+id/edtMoney_Act_newrecord"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -40,11 +40,11 @@
                 </EditText>
             </TableRow>
             <ListView
-                android:id="@+id/listView1"
+                android:id="@+id/listview_Act_newrecord"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" 
-                android:cacheColorHint="#00000000">
+   
+                android:layout_weight="1" android:cacheColorHint="#00000000">
             </ListView>
             <TableRow
                 android:id="@+id/tableRow2"
@@ -52,13 +52,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip" >
                 <Button
-                    android:id="@+id/button1"
+                    android:id="@+id/OK_Act_newrecord"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="保存" />
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/Cancel_Act_newrecord"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
