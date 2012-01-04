@@ -34,6 +34,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -157,10 +158,18 @@ public class TmpSettingItem extends Activity
 	     {
 	  	  // TODO Auto-generated method stub
 	      //显示一个图标的列表供选择
-	    	LayoutInflater inflater = getLayoutInflater();
-	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview,null);
-	    	GridView gvImg=(GridView)layout.findViewById(R.id.gvImage_dialog);
-	  	    gvImageAdapter gvAdapter=new gvImageAdapter(TmpSettingItem.this);
+	    	
+//	    	LayoutInflater inflater = getLayoutInflater();
+//	    	View layout = (View)inflater.inflate(R.layout.dialog_image_gridview,null);
+	    	//GridView gvImg=(GridView)layout.findViewById(R.id.gvImage_dialog);
+	    	
+	    	GridView gvImg=new GridView(TmpSettingItem.this);
+
+	    	gvImg.setBackgroundResource(android.R.color.white);
+	    	gvImg.setNumColumns(5);
+	    	gvImg.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+	    	
+	    	gvImageAdapter gvAdapter=new gvImageAdapter(TmpSettingItem.this);
 	  	    gvImg.setAdapter(gvAdapter);
 	  	    gvImg.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		    { @Override
@@ -791,14 +800,14 @@ public class TmpSettingItem extends Activity
 //	  Field ff = null;
 	  try
 	  {
-		 for (String[] bName : getDaoCategory().GetAllParentCategorys(getSession().getUserId(), Enums.InOrOut.Incoming.getValue()))
+		 for (ModCategory modCategory : getDaoCategory().GetAllParentCategorys(getSession().getUserId(), Enums.InOrOut.Incoming.getValue()))
 		 {
 //			ff = cl.getField(bName[1]);
 //			int rId = ff.getInt(cl);
 			map = new HashMap<String, Object>();
-			map.put("name", bName[0]);
-			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
-			map.put("imgName", bName[1]);
+			map.put("name", modCategory.getCategoryName());
+			map.put("img", DataHelper.GetDrawIdByName(modCategory.getIcon()));
+			map.put("imgName", modCategory.getIcon());
 			list.add(map);
 		 }
 	  }
@@ -822,14 +831,14 @@ public class TmpSettingItem extends Activity
 //	  Field ff = null;
 	  try
 	  {
-		 for (String[] bName : getDaoCategory().GetAllChildrenCategorys(getSession().getUserId(), Enums.InOrOut.Incoming.getValue(),parentName))
+		 for (ModCategory modCategory : getDaoCategory().GetAllChildrenCategorys(getSession().getUserId(), Enums.InOrOut.Incoming.getValue(),parentName))
 		 {
 //			ff = cl.getField(bName[1]);
 //			int rId = ff.getInt(cl);
 			map = new HashMap<String, Object>();
-			map.put("name", bName[0]);
-			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
-			map.put("imgName", bName[1]);
+			map.put("name", modCategory.getCategoryName());
+			map.put("img", DataHelper.GetDrawIdByName(modCategory.getIcon()));
+			map.put("imgName", modCategory.getIcon());
 			list.add(map);
 		 }
 	  }
@@ -853,14 +862,14 @@ public class TmpSettingItem extends Activity
 //	  Field ff = null;
 	  try
 	  {
-		 for (String[] bName : getDaoCategory().GetAllParentCategorys(getSession().getUserId(), Enums.InOrOut.Payout.getValue()))
+		 for (ModCategory modCategory : getDaoCategory().GetAllParentCategorys(getSession().getUserId(), Enums.InOrOut.Payout.getValue()))
 		 {
 //			ff = cl.getField(bName[1]);
 //			int rId = ff.getInt(cl);
 			map = new HashMap<String, Object>();
-			map.put("name", bName[0]);
-			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
-			map.put("imgName", bName[1]);
+			map.put("name", modCategory.getCategoryName());
+			map.put("img", DataHelper.GetDrawIdByName(modCategory.getIcon()));
+			map.put("imgName", modCategory.getIcon());
 			list.add(map);
 		 }
 	  }
@@ -884,14 +893,14 @@ public class TmpSettingItem extends Activity
 //	  Field ff = null;
 	  try
 	  {
-		 for (String[] bName : getDaoCategory().GetAllChildrenCategorys(getSession().getUserId(), Enums.InOrOut.Payout.getValue(),parentName))
+		 for (ModCategory modCategory : getDaoCategory().GetAllChildrenCategorys(getSession().getUserId(), Enums.InOrOut.Payout.getValue(),parentName))
 		 {
 //			ff = cl.getField(bName[1]);
 //			int rId = ff.getInt(cl);
 			map = new HashMap<String, Object>();
-			map.put("name", bName[0]);
-			map.put("img", DataHelper.GetDrawIdByName(bName[1]));
-			map.put("imgName", bName[1]);
+			map.put("name",modCategory.getCategoryName());
+			map.put("img", DataHelper.GetDrawIdByName(modCategory.getIcon()));
+			map.put("imgName", modCategory.getIcon());
 			list.add(map);
 		 }
 	  }

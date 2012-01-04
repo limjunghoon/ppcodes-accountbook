@@ -20,6 +20,52 @@ public class DaoProject extends DaoBase
 	  dbHelper = new DBHelper(context);
    }
 
+   public List<ModProject> GetAllProjectByUserIdForAdd(int UserId)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  try
+	  {
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery("Select ProjectName,ProjectId From [Project] Where UserId=? And Disabled=0", new String[] { String.valueOf(UserId) });
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
+		 {
+			List<ModProject> list = new ArrayList<ModProject>();
+			do
+			{
+			   ModProject modProject=new ModProject();
+			   modProject.setProjectName(cursor.getString(0));
+			   modProject.setProjectId(cursor.getInt(1));
+			   list.add(modProject);
+			} 
+			while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;// cursor为空，表示出了异常
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 Log.e("ERROR", e.getMessage() + "DaoProject.GetAllProjectByUserId（）");
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;// 默认为存在防止多重添加
+   }
+   
    public List<String> GetAllProjectByUserId(int UserId)
    {
 	  SQLiteDatabase db = null;

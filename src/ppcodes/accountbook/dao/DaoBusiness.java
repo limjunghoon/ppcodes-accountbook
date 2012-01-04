@@ -56,6 +56,52 @@ public class DaoBusiness extends DaoBase
    // }
    // }
 
+   public List<ModBusiness> GetAllBusinessByUserIdForAdd(int UserId)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  try
+	  {
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery("Select BusinessName,BusinessId From [Business] Where UserId=? And Disabled=0", new String[] { String.valueOf(UserId) });
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
+		 {
+			List<ModBusiness> list = new ArrayList<ModBusiness>();
+			do
+			{
+			   ModBusiness modBusiness=new ModBusiness();
+			   modBusiness.setBusinessName(cursor.getString(0));
+			   modBusiness.setBusinessId(cursor.getInt(1));
+			   list.add(modBusiness);
+			} 
+			while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;// cursor为空，表示出了异常
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 Log.e("ERROR", e.getMessage() + "DaoBusiness.GetAllBusinessByUserId（）");
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;// 默认为存在防止多重添加
+   }
+   
    public List<String> GetAllBusinessByUserId(int UserId)
    {
 	  SQLiteDatabase db = null;
