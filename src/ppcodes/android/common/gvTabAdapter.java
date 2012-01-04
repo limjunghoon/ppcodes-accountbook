@@ -28,8 +28,7 @@ public class gvTabAdapter extends BaseAdapter
 	  for (int i = 0; i < list.size(); i++)
 	  {
 		 lays[i]=(RelativeLayout)inflater.inflate(R.layout.gridview_newrec_tab, null);
-		 lays[i].setLayoutParams(new GridView.LayoutParams(width, height));
-		 
+//		 lays[i].setLayoutParams(new GridView.LayoutParams(width, height));
 		 ImageView img=(ImageView)lays[i].findViewById(R.id.img_gridview_newrec_tab);
 		 img.setImageResource(list.get(i).getImgId());
 		 

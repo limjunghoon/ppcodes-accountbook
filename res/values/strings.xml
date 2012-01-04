@@ -33,28 +33,29 @@
     <string name="txtSettingCurrentUser">当前账户:</string>
     <string name="txtSettingDefaultCategory">默认项目设置:</string>
     <string name="txtSettingDataAndAccount">数据和账户设置:</string>
-    
-    <!-- c_开头表示不变的控件文字-->
+    <!-- c_开头表示不变的控件文字 -->
     <string name="c_delete">删除</string>
     <string name="c_setDefault">设为默认</string>
     <string name="c_edit">编辑</string>
     <string name="c_name">名称</string>
     <string name="c_icon">图标</string>
     <string name="c_save">保存</string>
-        
-    <!-- alert_开头表示警告信息--> 
+    <!-- alert_开头表示警告信息 -->
     <string name="alert_tip">提示</string>
     <string name="alert_notBeEmpty">内容不能为空</string>
     <string name="alert_canNotDel">不能删除该项</string>
     <string name="alert_existOrError">已存在或出错</string>
-        
-    <!-- d_开头表示不变的初始定义-->
+    <!-- d_开头表示不变的初始定义 -->
+    <string name="d_category">类别</string>
+    <string name="d_categorychild">子类</string>
+    <string name="d_date">日期</string>
+    <string name="d_comment">备注</string>
     <string name="d_business">商家</string>
     <string name="d_project">项目</string>
     <string name="d_incoming">收入</string>
     <string name="d_payout">支出</string>
     <string name="d_account">账户</string>
-    <string name="d_dataManage">数据管理</string>	
+    <string name="d_dataManage">数据管理</string>
     <string name="d_otherSetting">其他设置</string>
     <string name="d_about">关于</string>
     <string name="d_aboutPP">关于PP账本</string>

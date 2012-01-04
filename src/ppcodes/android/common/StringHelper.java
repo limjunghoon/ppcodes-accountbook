@@ -6,7 +6,7 @@ import java.util.Date;
 public class StringHelper
 {
    static SimpleDateFormat tempDateTime = new SimpleDateFormat("yyyyMMddHHmmss");
-   static SimpleDateFormat tempDate=new SimpleDateFormat("yyyyMMdd");
+   static SimpleDateFormat tempDate=new SimpleDateFormat("yyyy-MM-dd");
    
    public static String FormatDateTime(Date date)
    {
