@@ -122,8 +122,8 @@ public class Dialogs
 	  Activity act = (Activity) context;
 	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
 	  WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-	  params.width = dm.widthPixels * width / 100;
-	  params.height = dm.heightPixels * height / 100;
+	  params.width = (dm.widthPixels * (width+2)) / 100;
+	  params.height = (dm.heightPixels * (height+2)) / 100;
 	  dialog.getWindow().setAttributes(params);
    }
 

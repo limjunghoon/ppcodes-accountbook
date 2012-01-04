@@ -49,6 +49,269 @@ public class DaoCategory extends DaoBase
    }
    
    /**
+    * InOrOut 2代表支出1代表收入
+    * 
+    * @param UserId
+    * @param InOrOut
+    * @return
+    */
+   public List<ModCategory> GetAllParentCategorys(int UserId, int InOrOut)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  List<ModCategory> list = null;
+	  try
+	  {
+		 String sqlString = "Select [CategoryName],[Icon] From [Category] Where [UserId]=? And [InOrOut]=? And [ParentCategoryId]=0 And [Disabled]=0";
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(InOrOut) });
+		 list = new ArrayList<ModCategory>();
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)
+		 {
+			do
+			{
+			   ModCategory modCategory=new ModCategory();	
+			   modCategory.setCategoryName(cursor.getString(0));
+			   modCategory.setIcon(cursor.getString(1));
+			   list.add(modCategory);
+			} while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;
+   }
+
+   /**
+    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入
+    * 
+    * @param modCategory
+    * @return
+    */
+   public List<ModCategory> GetAllChildrenCategorys(int UserId, int InOrOut, String name)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  List<ModCategory> list = null;
+	  try
+	  {
+		 String sqlString = "Select [CategoryName],[Icon] From [Category] Where [UserId]=? And [ParentCategoryId]=? And [InOrOut]=?  And [Disabled]=0";
+		 db = dbHelper.getReadableDatabase();
+		 int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, name);
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(sID), String.valueOf(InOrOut) });
+		 list = new ArrayList<ModCategory>();
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)
+		 {
+			do
+			{
+			   ModCategory modCategory=new ModCategory();	
+			   modCategory.setCategoryName(cursor.getString(0));
+			   modCategory.setIcon(cursor.getString(1));
+			   list.add(modCategory);
+			} while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;
+   }
+   
+   /**
+    * InOrOut 2代表支出1代表收入
+    * 
+    * @param UserId
+    * @param InOrOut
+    * @return
+    */
+   public List<ModCategory> GetAllParentCategorysAndId(int UserId, int InOrOut)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  List<ModCategory> list = null;
+	  try
+	  {
+		 String sqlString = "Select [CategoryName],[CategoryId] From [Category] Where [UserId]=? And [InOrOut]=? And [ParentCategoryId]=0 And [Disabled]=0";
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(InOrOut) });
+		 list = new ArrayList<ModCategory>();
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)
+		 {
+			do
+			{
+			   ModCategory modCategory=new ModCategory();	
+			   modCategory.setCategoryName(cursor.getString(0));
+			   modCategory.setCategoryId(cursor.getInt(1));
+			   list.add(modCategory);
+			} while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;
+   }
+   
+   /**
+    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入
+    * 
+    * @param modCategory
+    * @return
+    */
+   public List<ModCategory> GetAllChildrenCategorysAndId(int UserId, int InOrOut, String name)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  List<ModCategory> list = null;
+	  try
+	  {
+		 String sqlString = "Select [CategoryName],[CategoryId] From [Category] Where [UserId]=? And [ParentCategoryId]=? And [InOrOut]=?  And [Disabled]=0";
+		 db = dbHelper.getReadableDatabase();
+		 int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, name);
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(sID), String.valueOf(InOrOut) });
+		 list = new ArrayList<ModCategory>();
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)
+		 {
+			do
+			{
+			   ModCategory modCategory=new ModCategory();	
+			   modCategory.setCategoryName(cursor.getString(0));
+			   modCategory.setCategoryId(cursor.getInt(1));
+			   list.add(modCategory);
+			} while (cursor.moveToNext());
+			return list;
+		 }
+		 else
+		 {
+			return null;
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;
+   }
+
+
+   /**
+    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入 0为异常
+    * 
+    * @param modCategory
+    * @return
+    */
+   public int GetRandomChildrenCategoryId(int UserId, int InOrOut)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  int id = 0;
+	  try
+	  {
+		 String sqlString = "Select [CategoryId] From [Category] Where [UserId]=? And [InOrOut]=? And [ParentCategoryId]！=0  And [Disabled]=0";
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(InOrOut) });
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)
+		 {
+			do
+			{
+			   id = cursor.getInt(0);
+			   break;
+			} while (cursor.moveToNext());
+			return id;
+		 }
+		 else
+		 {
+			return 0;
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return id;
+   }
+
+   
+   /**
     * 判断是否存在此种类的名称，存在则添加失败，不存在则添加新种类
     * 需要ParentCategoryId,CategoryName,Icon,InOrOut,UserId
     * 
@@ -105,160 +368,7 @@ public class DaoCategory extends DaoBase
 	  }
 	  return false;
    }
-
-   /**
-    * InOrOut 2代表支出1代表收入
-    * 
-    * @param UserId
-    * @param InOrOut
-    * @return
-    */
-   public List<String[]> GetAllParentCategorys(int UserId, int InOrOut)
-   {
-	  SQLiteDatabase db = null;
-	  Cursor cursor = null;
-	  List<String[]> list = null;
-	  try
-	  {
-		 String sqlString = "Select [CategoryName],[Icon] From [Category] Where [UserId]=? And [InOrOut]=? And [ParentCategoryId]=0 And [Disabled]=0";
-		 db = dbHelper.getReadableDatabase();
-		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(InOrOut) });
-		 list = new ArrayList<String[]>();
-		 if (cursor.moveToFirst() && cursor.getCount() > 0)
-		 {
-			do
-			{
-			   String[] ss=new String[]{cursor.getString(0),cursor.getString(1)};
-			   list.add(ss);
-			} while (cursor.moveToNext());
-			return list;
-		 }
-		 else
-		 {
-			return null;
-		 }
-	  }
-	  catch (Exception e)
-	  {
-		 // TODO: handle exception
-		 e.printStackTrace();
-	  }
-	  finally
-	  {
-		 if (db != null)
-		 {
-			db.close();
-		 }
-		 if (cursor != null)
-		 {
-			cursor.close();
-		 }
-	  }
-	  return null;
-   }
-
-  
-
-   /**
-    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入
-    * 
-    * @param modCategory
-    * @return
-    */
-   public List<String[]> GetAllChildrenCategorys(int UserId, int InOrOut, String name)
-   {
-	  SQLiteDatabase db = null;
-	  Cursor cursor = null;
-	  List<String[]> list = null;
-	  try
-	  {
-		 String sqlString = "Select [CategoryName],[Icon] From [Category] Where [UserId]=? And [ParentCategoryId]=? And [InOrOut]=?  And [Disabled]=0";
-		 db = dbHelper.getReadableDatabase();
-		 int sID = super.getIdByName(db, DicCategory.CategoryId, DicCategory.TableName, DicCategory.CategoryName, name);
-		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(sID), String.valueOf(InOrOut) });
-		 list = new ArrayList<String[]>();
-		 if (cursor.moveToFirst() && cursor.getCount() > 0)
-		 {
-			do
-			{
-			   String[] ss=new String[]{cursor.getString(0),cursor.getString(1)};
-			   list.add(ss);
-			} while (cursor.moveToNext());
-			return list;
-		 }
-		 else
-		 {
-			return null;
-		 }
-	  }
-	  catch (Exception e)
-	  {
-		 // TODO: handle exception
-		 e.printStackTrace();
-	  }
-	  finally
-	  {
-		 if (db != null)
-		 {
-			db.close();
-		 }
-		 if (cursor != null)
-		 {
-			cursor.close();
-		 }
-	  }
-	  return null;
-   }
-
-   /**
-    * CategoryName, UserId, InOrOut必填 2代表支出1代表收入 0为异常
-    * 
-    * @param modCategory
-    * @return
-    */
-   public int GetRandomChildrenCategoryId(int UserId, int InOrOut)
-   {
-	  SQLiteDatabase db = null;
-	  Cursor cursor = null;
-	  int id = 0;
-	  try
-	  {
-		 String sqlString = "Select [CategoryId] From [Category] Where [UserId]=? And [InOrOut]=? And [ParentCategoryId]！=0  And [Disabled]=0";
-		 db = dbHelper.getReadableDatabase();
-		 cursor = db.rawQuery(sqlString, new String[] { String.valueOf(UserId), String.valueOf(InOrOut) });
-		 if (cursor.moveToFirst() && cursor.getCount() > 0)
-		 {
-			do
-			{
-			   id = cursor.getInt(0);
-			   break;
-			} while (cursor.moveToNext());
-			return id;
-		 }
-		 else
-		 {
-			return 0;
-		 }
-	  }
-	  catch (Exception e)
-	  {
-		 // TODO: handle exception
-		 e.printStackTrace();
-	  }
-	  finally
-	  {
-		 if (db != null)
-		 {
-			db.close();
-		 }
-		 if (cursor != null)
-		 {
-			cursor.close();
-		 }
-	  }
-	  return id;
-   }
-
+   
    /**
     * 更新种类 需要赋值CategoryName,ModifyTime,UserId,Icon,
     * oldname为之前的值，categoryname为之后的值
