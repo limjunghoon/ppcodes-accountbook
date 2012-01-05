@@ -1,6 +1,8 @@
 package ppcodes.accountbook.app;
 
+import java.net.ContentHandler;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,17 +25,26 @@ import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.StringHelper;
 import ppcodes.android.common.gvTabAdapter;
-import android.R.integer;
+import android.app.Activity;
 import android.app.ActivityGroup;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -49,9 +60,11 @@ public class ActNewRecording extends ActivityGroup
    gvTabAdapter tabAdapter;
    FrameLayout container;
    ListView listView;
-
+   
+   
    // 属性
    Session _session;
+
    Session getSession()
    {
 	  if (_session == null)
@@ -60,6 +73,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    Dialogs _dialogs;
+
    Dialogs getDialogs()
    {
 	  if (_dialogs == null)
@@ -68,6 +82,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    DaoProfile _daoProfile;
+
    DaoProfile getDaoProfile()
    {
 	  if (_daoProfile == null)
@@ -76,6 +91,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    DaoBusiness _daoBusiness;
+
    DaoBusiness getDaoBusiness()
    {
 	  if (_daoBusiness == null)
@@ -86,6 +102,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    DaoProject _daoProject;
+
    DaoProject getDaoProject()
    {
 	  if (_daoProject == null)
@@ -96,6 +113,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    DaoAccount _daoAccount;
+
    DaoAccount getDaoAccount()
    {
 	  if (_daoAccount == null)
@@ -106,6 +124,7 @@ public class ActNewRecording extends ActivityGroup
    }
 
    DaoCategory _daoCategory;
+
    DaoCategory getDaoCategory()
    {
 	  if (_daoCategory == null)
@@ -118,68 +137,12 @@ public class ActNewRecording extends ActivityGroup
    // 字段
    int CURRENT_TAB;
    String PARENT_NAME;
-
+   String newItemName;
+   
    void InitControls()
    {
 	  listView = (ListView) findViewById(R.id.listview_Act_newrecord);
 	  gvTab = (GridView) findViewById(R.id.gvTab_Act_newrecord);
-   }
-
-   List<Map<String, Object>> getData(int typeId, Object dataList)
-   {
-	  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-	  Map<String, Object> map = null;
-	  if (typeId == Enums.AddRecord.Category.getValue())
-	  {
-		 for (ModCategory modCategory : (List<ModCategory>) dataList)
-		 {
-		   map = new HashMap<String, Object>();
-           map.put("name", modCategory.getCategoryName());
-           map.put("id", modCategory.getCategoryId());
-           list.add(map);
-		 }
-	  }
-	  else if (typeId == Enums.AddRecord.ChildCategory.getValue())
-	  {
-		 for (ModCategory modCategory : (List<ModCategory>) dataList)
-		 {
-		   map = new HashMap<String, Object>();
-           map.put("name", modCategory.getCategoryName());
-           map.put("id", modCategory.getCategoryId());
-           list.add(map);
-		 }
-	  }
-	  else if (typeId == Enums.AddRecord.Account.getValue())
-	  {
-		 for (ModAccount modAccount : (List<ModAccount>) dataList)
-		 {
-		   map = new HashMap<String, Object>();	
-           map.put("name", modAccount.getAccountName());
-           map.put("id", modAccount.getAccountId());
-           list.add(map);
-		 }
-	  }
-	  else if (typeId == Enums.AddRecord.Project.getValue())
-	  {
-		 for (ModProject modProject : (List<ModProject>) dataList)
-		 {
-		   map = new HashMap<String, Object>();
-           map.put("name", modProject.getProjectName());
-           map.put("id", modProject.getProjectId());
-           list.add(map);
-		 }
-	  }
-	  else if (typeId == Enums.AddRecord.Business.getValue())
-	  {
-		 for (ModBusiness modBusiness : (List<ModBusiness>) dataList)
-		 {
-		   map = new HashMap<String, Object>();
-           map.put("name", modBusiness.getBusinessName());
-           map.put("id", modBusiness.getBusinessId());
-           list.add(map);
-		 }
-	  }
-	  return list;
    }
 
    void InitControlsListener()
@@ -190,104 +153,125 @@ public class ActNewRecording extends ActivityGroup
 		 public void onItemClick(AdapterView<?> parentView, View currentView, int position, long arg3)
 		 {
 			// TODO Auto-generated method stub
+		    final View currentView2 = currentView;
+
 			switch (position)
 			{
 			   case 0:// 父类
 				  List<ModCategory> list = getDaoCategory()
 						.GetAllParentCategorysAndId(getSession().getUserId(), CURRENT_TAB == 0 ? Enums.InOrOut.Incoming.getValue() : Enums.InOrOut.Payout.getValue());
 
-				  SimpleAdapter sAdapter=new SimpleAdapter(ActNewRecording.this,
-						getData(Enums.AddRecord.Category.getValue(), list), 
-						R.layout.listview_text_id, 
-						new String[]{"name","id"}, 
-						new int[]{R.id.txtName_listview_text_id,R.id.txtId_listview_text_id});
-				  ListView listView=new ListView(ActNewRecording.this);
-				  listView.setBackgroundResource(android.R.color.white);
-				  listView.setAdapter(sAdapter);
-				  listView.setOnItemClickListener(getOnItemClickListener(parentView,currentView,position));
-				  getDialogs().ShowCustomViewDialog(null,listView, 50, 50);
+				  SimpleAdapter sAdapter = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Category.getValue(), list), R.layout.listview_text_id, new String[] { "name", "id" },
+						new int[] { R.id.txtName_listview_text_id, R.id.txtId_listview_text_id });
+				  ListView listView1 = new ListView(ActNewRecording.this);
+				  listView1.setBackgroundResource(android.R.color.white);
+				  listView1.setAdapter(sAdapter);
+				  listView1.setOnItemClickListener(getOnItemClickListener(parentView, currentView, position));
+				  getDialogs().ShowCustomViewDialog(null, listView1, 80, 70);
 				  break;
-			   
+
 			   case 1:// 子类
 				  List<ModCategory> list2 = getDaoCategory().GetAllChildrenCategorysAndId(getSession().getUserId(),
 						CURRENT_TAB == 0 ? Enums.InOrOut.Incoming.getValue() : Enums.InOrOut.Payout.getValue(), PARENT_NAME);
-				  SimpleAdapter sAdapter2=new SimpleAdapter(ActNewRecording.this,
-						getData(Enums.AddRecord.ChildCategory.getValue(), list2), 
-						R.layout.listview_text_id, 
-						new String[]{"name","id"}, 
-						new int[]{R.id.txtName_listview_text_id,R.id.txtId_listview_text_id});
-				  ListView listView2=new ListView(ActNewRecording.this);
+				  SimpleAdapter sAdapter2 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.ChildCategory.getValue(), list2), R.layout.listview_text_id, new String[] { "name", "id" },
+						new int[] { R.id.txtName_listview_text_id, R.id.txtId_listview_text_id });
+				  ListView listView2 = new ListView(ActNewRecording.this);
 				  listView2.setBackgroundResource(android.R.color.white);
 				  listView2.setAdapter(sAdapter2);
-				  listView2.setOnItemClickListener(getOnItemClickListener(parentView,currentView,position));
-				  getDialogs().ShowCustomViewDialog(null,listView2, 50, 50);
+				  listView2.setOnItemClickListener(getOnItemClickListener(parentView, currentView, position));
+				  getDialogs().ShowCustomViewDialog(null, listView2, 80, 70);
 				  break;
-				  
-			   
+
 			   case 2:// 项目
 				  List<ModProject> list3 = getDaoProject().GetAllProjectByUserIdForAdd(getSession().getUserId());
-				  SimpleAdapter sAdapter3=new SimpleAdapter(ActNewRecording.this,
-						getData(Enums.AddRecord.Project.getValue(), list3), 
-						R.layout.listview_text_id, 
-						new String[]{"name","id"}, 
-						new int[]{R.id.txtName_listview_text_id,R.id.txtId_listview_text_id});
-				  ListView listView3=new ListView(ActNewRecording.this);
+				  SimpleAdapter sAdapter3 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Project.getValue(), list3), R.layout.listview_text_id, new String[] { "name", "id" },
+						new int[] { R.id.txtName_listview_text_id, R.id.txtId_listview_text_id });
+				  ListView listView3 = new ListView(ActNewRecording.this);
 				  listView3.setBackgroundResource(android.R.color.white);
 				  listView3.setAdapter(sAdapter3);
-				  listView3.setOnItemClickListener(getOnItemClickListener(parentView,currentView,position));
-				  getDialogs().ShowCustomViewDialog(null,listView3, 50, 50);
+				  listView3.setOnItemClickListener(getOnItemClickListener(parentView, currentView, position));
+				  getDialogs().ShowCustomViewDialog(null, listView3, 80, 70);
 				  break;
-				  
-				  
+
 			   case 3:// 账户
 				  List<ModAccount> list4 = getDaoAccount().GetAllAccountByUserIdForAdd(getSession().getUserId());
-				  SimpleAdapter sAdapter4=new SimpleAdapter(ActNewRecording.this,
-						getData(Enums.AddRecord.Account.getValue(), list4), 
-						R.layout.listview_text_id, 
-						new String[]{"name","id"}, 
-						new int[]{R.id.txtName_listview_text_id,R.id.txtId_listview_text_id});
-				  ListView listView4=new ListView(ActNewRecording.this);
+				  SimpleAdapter sAdapter4 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Account.getValue(), list4), R.layout.listview_text_id, new String[] { "name", "id" },
+						new int[] { R.id.txtName_listview_text_id, R.id.txtId_listview_text_id });
+				  ListView listView4 = new ListView(ActNewRecording.this);
 				  listView4.setBackgroundResource(android.R.color.white);
 				  listView4.setAdapter(sAdapter4);
-				  listView4.setOnItemClickListener(getOnItemClickListener(parentView,currentView,position));
-				  getDialogs().ShowCustomViewDialog(null,listView4, 50, 50);
+				  listView4.setOnItemClickListener(getOnItemClickListener(parentView, currentView, position));
+				  getDialogs().ShowCustomViewDialog(null, listView4, 80, 70);
 				  break;
-				  
-				  
+
 			   case 4:
 				  if (CURRENT_TAB == 0)// 收入的商家
 				  {
-					  List<ModBusiness> list5 = getDaoBusiness().GetAllBusinessByUserIdForAdd(getSession().getUserId());
-					  SimpleAdapter sAdapter5=new SimpleAdapter(ActNewRecording.this,
-							getData(Enums.AddRecord.Business.getValue(), list5), 
-							R.layout.listview_text_id, 
-							new String[]{"name","id"}, 
-							new int[]{R.id.txtName_listview_text_id,R.id.txtId_listview_text_id});
-					  ListView listView5=new ListView(ActNewRecording.this);
-					  listView5.setBackgroundResource(android.R.color.white);
-					  listView5.setAdapter(sAdapter5);
-					  listView5.setOnItemClickListener(getOnItemClickListener(parentView,currentView,position));
-					  getDialogs().ShowCustomViewDialog(null,listView5, 50, 50);
-					  break;
+					 List<ModBusiness> list5 = getDaoBusiness().GetAllBusinessByUserIdForAdd(getSession().getUserId());
+					 SimpleAdapter sAdapter5 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Business.getValue(), list5), R.layout.listview_text_id, new String[] { "name", "id" },
+						   new int[] { R.id.txtName_listview_text_id, R.id.txtId_listview_text_id });
+					 ListView listView5 = new ListView(ActNewRecording.this);
+					 listView5.setBackgroundResource(android.R.color.white);
+					 listView5.setAdapter(sAdapter5);
+					 listView5.setOnItemClickListener(getOnItemClickListener(parentView, currentView, position));
+					 getDialogs().ShowCustomViewDialog(null, listView5, 80, 70);
+					 break;
 				  }
 				  else if (CURRENT_TAB == 1)// 支出的日期
 				  {
-
+					 final Calendar cd = Calendar.getInstance();
+					 cd.setTime(new Date());
+					 new DatePickerDialog(ActNewRecording.this, new DatePickerDialog.OnDateSetListener()
+					 {
+						@Override
+						public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+						{
+						   // TODO Auto-generated method stub
+						   TextView txtDate = (TextView) currentView2.findViewById(R.id.txtName_listview_newrecord);
+						   txtDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+						}
+					 }, cd.get(Calendar.YEAR), cd.get(Calendar.MONTH), cd.get(Calendar.DAY_OF_MONTH)).show();
 				  }
 				  break;
-				  
-				  
+
 			   case 5:
 				  if (CURRENT_TAB == 0)// 收入的日期
 				  {
-
+					 final Calendar cd = Calendar.getInstance();
+					 cd.setTime(new Date());
+					 new DatePickerDialog(ActNewRecording.this, new DatePickerDialog.OnDateSetListener()
+					 {
+						@Override
+						public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+						{
+						   // TODO Auto-generated method stub
+						   TextView txtDate = (TextView) currentView2.findViewById(R.id.txtName_listview_newrecord);
+						   txtDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+						}
+					 }, cd.get(Calendar.YEAR), cd.get(Calendar.MONTH), cd.get(Calendar.DAY_OF_MONTH)).show();
 				  }
 				  else if (CURRENT_TAB == 1)// 支出的备注
 				  {
 
 				  }
 				  break;
+
 			   case 6:// 收入的备注
+		          final TextView txtComment = (TextView)currentView2.findViewById(R.id.txtName_listview_newrecord);
+				  final EditText edtComment = new EditText(ActNewRecording.this);
+				  edtComment.setSingleLine(false);
+				  edtComment.setText(txtComment.getText().toString());
+				  DialogInterface.OnClickListener clickListener = new OnClickListener()
+				  {
+					 @Override
+					 public void onClick(DialogInterface dialog, int which)
+					 {
+						// TODO Auto-generated method stub		
+                        txtComment.setText(edtComment.getText().toString().trim());			
+						dialog.dismiss();
+					 }
+				  };
+				  getDialogs().ShowCustomViewDialogWithOKCancel("请输入备注，回车换行", edtComment, 90, 90, clickListener);
 
 				  break;
 			}
@@ -295,6 +279,45 @@ public class ActNewRecording extends ActivityGroup
 	  });
    }
 
+   /**
+    * 
+    * @param title 标题，如果没有则留null或者""
+    * @param view 需要加载的自定义布局
+    * @param height 高度占整个屏幕的百分比 如90代表90%
+    * @param width  宽度占整个屏幕的百分比
+    */
+   public void ShowCustomViewDialogWithOKCancel(String title, View view, int height, int width, DialogInterface.OnClickListener clickListener)
+   {
+	  AlertDialog dialog = new AlertDialog.Builder(this).create();
+	  if (title == null || title.equals(""))
+	  {
+		 dialog.setView(view);
+	  }
+	  else
+	  {
+		 dialog.setTitle(title);
+		 dialog.setView(view);
+	  }
+	  dialog.setButton("确定", clickListener);
+	  dialog.setButton2("取消", new DialogInterface.OnClickListener()
+	  {
+	     @Override
+	     public void onClick(DialogInterface dialog, int which)
+	     {
+	  	  // TODO Auto-generated method stub
+	  	   dialog.dismiss();
+	     }
+	  });
+	  dialog.show();
+	  DisplayMetrics dm = new DisplayMetrics();
+	  Activity act = (Activity) this;
+	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+	  WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+	  params.width = (dm.widthPixels * (width+2)) / 100;
+	  params.height = (dm.heightPixels * (height+2)) / 100;
+	  dialog.getWindow().setAttributes(params);
+   }
+   
    void InitTab()
    {
 	  try
@@ -316,7 +339,8 @@ public class ActNewRecording extends ActivityGroup
 			   SwitchActivity(position);
 			}
 		 });
-		 container = (FrameLayout) findViewById(R.id.container_Act_newrecord);
+		 // container = (FrameLayout)
+		 // findViewById(R.id.container_Act_newrecord);
 		 SwitchActivity(0);
 	  }
 	  catch (Exception e)
@@ -325,35 +349,95 @@ public class ActNewRecording extends ActivityGroup
 	  }
    }
 
-   OnItemClickListener getOnItemClickListener(final AdapterView<?> OutParentView, final View OutView,final int OutPosition)
+   @SuppressWarnings("unchecked")
+   List<Map<String, Object>> getData(int typeId, Object dataList)
    {
-     OnItemClickListener ListItemClickListener=new OnItemClickListener()
-     { @Override
-	   public void onItemClick(AdapterView<?> parentView, View selectView, int position, long arg3)
-	   {
-	     // TODO Auto-generated method stub
-	     TextView txtName=(TextView)selectView.findViewById(R.id.txtName_listview_text_id);
-	     TextView txtId=(TextView)selectView.findViewById(R.id.txtId_listview_text_id);
-	     
-	     TextView txtNameOut=(TextView)OutView.findViewById(R.id.txtName_listview_newrecord);
-	     TextView txtIdOut=(TextView)OutView.findViewById(R.id.txtId_listview_newrecord);
-	    
-	     txtNameOut.setText(txtName.getText().toString());
-	     txtIdOut.setText(txtId.getText().toString());
-	     if(OutPosition==0)
-	     {
-		   PARENT_NAME=txtName.getText().toString();
-	       View childView=OutParentView.getChildAt(1);
-		   TextView txtNameChild=(TextView)childView.findViewById(R.id.txtName_listview_newrecord);
-		   TextView txtIdChild=(TextView)childView.findViewById(R.id.txtId_listview_newrecord);
-		   txtNameChild.setText("");
-		   txtIdChild.setText("");
-	     }
-	     getDialogs().dismissAlertDialog();
-	   }
-     };
-     return ListItemClickListener;
+	  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	  Map<String, Object> map = null;
+	  if (typeId == Enums.AddRecord.Category.getValue())
+	  {
+		 for (ModCategory modCategory : (List<ModCategory>) dataList)
+		 {
+			map = new HashMap<String, Object>();
+			map.put("name", modCategory.getCategoryName());
+			map.put("id", modCategory.getCategoryId());
+			list.add(map);
+		 }
+	  }
+	  else if (typeId == Enums.AddRecord.ChildCategory.getValue())
+	  {
+		 for (ModCategory modCategory : (List<ModCategory>) dataList)
+		 {
+			map = new HashMap<String, Object>();
+			map.put("name", modCategory.getCategoryName());
+			map.put("id", modCategory.getCategoryId());
+			list.add(map);
+		 }
+	  }
+	  else if (typeId == Enums.AddRecord.Account.getValue())
+	  {
+		 for (ModAccount modAccount : (List<ModAccount>) dataList)
+		 {
+			map = new HashMap<String, Object>();
+			map.put("name", modAccount.getAccountName());
+			map.put("id", modAccount.getAccountId());
+			list.add(map);
+		 }
+	  }
+	  else if (typeId == Enums.AddRecord.Project.getValue())
+	  {
+		 for (ModProject modProject : (List<ModProject>) dataList)
+		 {
+			map = new HashMap<String, Object>();
+			map.put("name", modProject.getProjectName());
+			map.put("id", modProject.getProjectId());
+			list.add(map);
+		 }
+	  }
+	  else if (typeId == Enums.AddRecord.Business.getValue())
+	  {
+		 for (ModBusiness modBusiness : (List<ModBusiness>) dataList)
+		 {
+			map = new HashMap<String, Object>();
+			map.put("name", modBusiness.getBusinessName());
+			map.put("id", modBusiness.getBusinessId());
+			list.add(map);
+		 }
+	  }
+	  return list;
    }
+
+   OnItemClickListener getOnItemClickListener(final AdapterView<?> OutParentView, final View OutView, final int OutPosition)
+   {
+	  OnItemClickListener ListItemClickListener = new OnItemClickListener()
+	  {
+		 @Override
+		 public void onItemClick(AdapterView<?> parentView, View selectView, int position, long arg3)
+		 {
+			// TODO Auto-generated method stub
+			TextView txtName = (TextView) selectView.findViewById(R.id.txtName_listview_text_id);
+			TextView txtId = (TextView) selectView.findViewById(R.id.txtId_listview_text_id);
+
+			TextView txtNameOut = (TextView) OutView.findViewById(R.id.txtName_listview_newrecord);
+			TextView txtIdOut = (TextView) OutView.findViewById(R.id.txtId_listview_newrecord);
+
+			txtNameOut.setText(txtName.getText().toString());
+			txtIdOut.setText(txtId.getText().toString());
+			if (OutPosition == 0)
+			{
+			   PARENT_NAME = txtName.getText().toString();
+			   View childView = OutParentView.getChildAt(1);
+			   TextView txtNameChild = (TextView) childView.findViewById(R.id.txtName_listview_newrecord);
+			   TextView txtIdChild = (TextView) childView.findViewById(R.id.txtId_listview_newrecord);
+			   txtNameChild.setText("");
+			   txtIdChild.setText("");
+			}
+			getDialogs().dismissAlertDialog();
+		 }
+	  };
+	  return ListItemClickListener;
+   }
+
    /**
     * 绑定Tab选项
     * 
@@ -388,8 +472,8 @@ public class ActNewRecording extends ActivityGroup
 			break;
 	  }
 
-	  PARENT_NAME=modProfileForAdd.getParentCategoryName();
-	  
+	  PARENT_NAME = modProfileForAdd.getParentCategoryName();
+
 	  map.put("name", getResources().getString(R.string.d_category));
 	  map.put("item", modProfileForAdd.getParentCategoryName());
 	  map.put("id", modProfileForAdd.getParentCategoryId());
