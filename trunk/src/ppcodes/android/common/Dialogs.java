@@ -117,6 +117,46 @@ public class Dialogs
 		 dialog.setTitle(title);
 		 dialog.setView(view);
 	  }
+
+	  DisplayMetrics dm = new DisplayMetrics();
+	  Activity act = (Activity) context;
+	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+	  WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+	  params.width = (dm.widthPixels * (width+2)) / 100;
+	  params.height = (dm.heightPixels * (height+2)) / 100;
+	  dialog.getWindow().setAttributes(params);	  
+	  dialog.show();
+   }
+
+   /**
+    * 
+    * @param title 标题，如果没有则留null或者""
+    * @param view 需要加载的自定义布局
+    * @param height 高度占整个屏幕的百分比 如90代表90%
+    * @param width  宽度占整个屏幕的百分比
+    */
+   public void ShowCustomViewDialogWithOKCancel(String title, View view, int height, int width, DialogInterface.OnClickListener clickListener)
+   {
+	  dialog = new AlertDialog.Builder(context).create();
+	  if (title == null || title.equals(""))
+	  {
+		 dialog.setView(view);
+	  }
+	  else
+	  {
+		 dialog.setTitle(title);
+		 dialog.setView(view);
+	  }
+	  dialog.setButton("确定", clickListener);
+	  dialog.setButton2("取消", new DialogInterface.OnClickListener()
+	  {
+	     @Override
+	     public void onClick(DialogInterface dialog, int which)
+	     {
+	  	  // TODO Auto-generated method stub
+	  	   dialog.dismiss();
+	     }
+	  });
 	  dialog.show();
 	  DisplayMetrics dm = new DisplayMetrics();
 	  Activity act = (Activity) context;
@@ -126,7 +166,7 @@ public class Dialogs
 	  params.height = (dm.heightPixels * (height+2)) / 100;
 	  dialog.getWindow().setAttributes(params);
    }
-
+   
    public void dismissAlertDialog()
    {
 	  if (dialog.isShowing())
