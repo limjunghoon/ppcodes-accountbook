@@ -52,13 +52,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip" >
                 <Button
-                    android:id="@+id/OK_Act_newrecord"
+                    android:id="@+id/btnOK_Act_newrecord"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="保存" />
                 <Button
-                    android:id="@+id/Cancel_Act_newrecord"
+                    android:id="@+id/btnCancel_Act_newrecord"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
