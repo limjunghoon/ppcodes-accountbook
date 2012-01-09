@@ -283,7 +283,16 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加收入种类
 	  else if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 	  {
-		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Incoming.getValue(), edtNewItem.getText().toString(), imgName, StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0); 
+		ModCategory modCategory=new ModCategory();
+		modCategory.setParentCategoryId(0);
+		modCategory.setUserId(getSession().getUserId());
+	    modCategory.setInOrOut(Enums.InOrOut.Incoming.getValue());
+	    modCategory.setCategoryName(edtNewItem.getText().toString());
+	    modCategory.setIcon(imgName);
+	    modCategory.setCreateTime(StringHelper.FormatDateTime(new Date()));
+	    modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+	    modCategory.setDisabled(0);
+	    modCategory.setUseCount(0); 
         
 		if(IS_PARENT)
         {
@@ -306,7 +315,17 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加支出种类
 	  else if (SETTING_TYPE == Enums.ItemType.Payout.getValue())
 	  {
-		ModCategory modCategory=new ModCategory(0,getSession().getUserId(), Enums.InOrOut.Payout.getValue(), edtNewItem.getText().toString(), imgName, StringHelper.FormatDateTime(new Date()), StringHelper.FormatDateTime(new Date()), 0, 0);  
+	    ModCategory modCategory=new ModCategory();
+		modCategory.setParentCategoryId(0);
+		modCategory.setUserId(getSession().getUserId());
+	    modCategory.setInOrOut(Enums.InOrOut.Payout.getValue());
+	    modCategory.setCategoryName(edtNewItem.getText().toString());
+	    modCategory.setIcon(imgName);
+	    modCategory.setCreateTime(StringHelper.FormatDateTime(new Date()));
+	    modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+	    modCategory.setDisabled(0);
+	    modCategory.setUseCount(0); 
+	    
 	    if(IS_PARENT)
 	    {
 	      modCategory.setParentCategoryId(0);
