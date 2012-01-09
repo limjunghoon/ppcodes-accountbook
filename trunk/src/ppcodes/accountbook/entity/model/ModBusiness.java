@@ -7,8 +7,6 @@ public class ModBusiness
 	  
    }
    
- 
-   
    public ModBusiness(Integer _UserId,String _BusinessName,String _CreateTime,String _ModifyTime,Integer _Disabled,Integer _UseCount)
    {
 	  UserId=_UserId;
