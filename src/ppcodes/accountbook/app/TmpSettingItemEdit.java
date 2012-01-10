@@ -152,7 +152,7 @@ public class TmpSettingItemEdit extends Activity
 			 ModCategory modCategory=new ModCategory();
 			 modCategory.setCategoryName(sName);
 			 modCategory.setUserId(getSession().getUserId());
-			 modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
 			 modCategory.setIcon(imgName);
 			 
 			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
@@ -170,7 +170,7 @@ public class TmpSettingItemEdit extends Activity
 			 ModCategory modCategory=new ModCategory();
 			 modCategory.setCategoryName(sName);
 			 modCategory.setUserId(getSession().getUserId());
-			 modCategory.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
 			 modCategory.setIcon(imgName);
 			 
 			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
@@ -187,7 +187,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModAccount modAccount=new ModAccount();
 			 modAccount.setAccountName(sName);
-			 modAccount.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modAccount.setModifyTime(StringHelper.ToDateTime(new Date()));
 			 modAccount.setUserId(getSession().getUserId());
 			 
 			 if(getDaoAccount().UpdateAccountName(modAccount, itemName))
@@ -204,7 +204,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModProject modProject=new ModProject();
 			 modProject.setProjectName(sName);
-			 modProject.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modProject.setModifyTime(StringHelper.ToDateTime(new Date()));
 			 modProject.setUserId(getSession().getUserId());
 			 
 			 if(getDaoProject().UpdateProjectName(modProject, itemName))
@@ -221,7 +221,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
 			 modBusiness.setBusinessName(sName);
-			 modBusiness.setModifyTime(StringHelper.FormatDateTime(new Date()));
+			 modBusiness.setModifyTime(StringHelper.ToDateTime(new Date()));
 			 modBusiness.setUserId(getSession().getUserId());
 			 
 			 if(getDaoBusiness().UpdateBusinessName(modBusiness, itemName))

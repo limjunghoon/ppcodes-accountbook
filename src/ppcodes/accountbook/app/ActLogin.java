@@ -44,7 +44,15 @@ public class ActLogin extends Activity
    private CheckBox chkRememberName;
 
    // 类
-   private Dialogs dialogs;
+   Dialogs _dialogs;
+   Dialogs getDialogs()
+   {
+	  if(_dialogs==null)
+	  {
+		 _dialogs=new Dialogs(this);
+	  }
+	  return _dialogs;
+   }
    private DaoUserInfo daoLogin;
    private DaoInitDataBase daoInitDataBase;
 
@@ -56,7 +64,7 @@ public class ActLogin extends Activity
    void LoadingThread()
    {
 	  // 打开进度条
-	  dialogs.ShowLoadingDialogNoTitle("载入中。。。");
+	  getDialogs().ShowLoadingDialogNoTitle("载入中。。。");
 	  Thread thread = new Thread(new Runnable()
 	  {
 		 @Override
@@ -79,14 +87,15 @@ public class ActLogin extends Activity
 				  }
 				  else
 				  {
+					 getDialogs().setDialogDismiss();
 					 LoginFailed();
 				  }
 			   }
 			   else
 			   {
-				  dialogs.setDialogDismiss();
+				  getDialogs().setDialogDismiss();
 				  Looper.prepare();
-				  dialogs.ShowOKCancelAlertDialog("提示", "该用户名不存在，将创建一个新的用户，你确定吗？", new OnClickListener()
+				  getDialogs().ShowOKCancelAlertDialog("提示", "该用户名不存在，将创建一个新的用户，你确定吗？", new OnClickListener()
 				  {
 					 @Override
 					 public void onClick(DialogInterface dialog, int which)
@@ -95,8 +104,8 @@ public class ActLogin extends Activity
 						dialog.dismiss();
 //						Looper.loop();
 //						Looper.prepare();
-						dialogs.ShowLoadingDialogNoTitle("请稍候。。。");
-                        String nowTime=StringHelper.FormatDateTime(new Date());
+						getDialogs().ShowLoadingDialogNoTitle("请稍候。。。");
+                        String nowTime=StringHelper.ToDateTime(new Date());
 						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
 						daoLogin.InsertUser(modUserInfo);
 						uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());
@@ -141,16 +150,16 @@ public class ActLogin extends Activity
    // 登录失败
    void LoginFailed()
    {
-	  dialogs.setDialogDismiss();
+
 	  Looper.prepare();
-	  dialogs.ShowOKAlertDialog("提示", "登录失败，请确定密码正确");
+	  getDialogs().ShowOKAlertDialog("提示", "登录失败，请确定密码正确");
 	  Looper.loop();
    }
 
    // 显示帮助
    void ShowHelpDialog()
    {
-	  dialogs.ShowOKAlertDialog("提示", "使用不存在的账户和密码会自动创建一个新的账户");
+	  getDialogs().ShowOKAlertDialog("提示", "使用不存在的账户和密码会自动创建一个新的账户");
    }
 
 
@@ -240,7 +249,7 @@ public class ActLogin extends Activity
 		 }
 	  };
 
-	  dialogs.ShowOKCancelAlertDialog("提示", "您打算退出程序吗？", listener);
+	  getDialogs().ShowOKCancelAlertDialog("提示", "您打算退出程序吗？", listener);
    }
 
    // onCreate
@@ -253,7 +262,6 @@ public class ActLogin extends Activity
 	  SharedPreferences userSetting = getPreferences(Activity.MODE_PRIVATE);
 	  String userNameString = userSetting.getString(CACHE_USERNAME, "");
 
-	  dialogs = new Dialogs(ActLogin.this);
 	  InitControls();
 	  InitControlsListener();
 
@@ -290,6 +298,7 @@ public class ActLogin extends Activity
    {
 	  if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
 	  { // 按下的如果是BACK，同时没有重复
+		 getDialogs().setDialogDismiss();
 		 FinishDialog();
 	  }
 	  return false;

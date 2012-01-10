@@ -25,7 +25,5 @@ public class ActAbout extends Activity
 	  }
 	  return false;
    }
-   
-   
-   
+  
 }
