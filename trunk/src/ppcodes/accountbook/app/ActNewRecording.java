@@ -191,8 +191,8 @@ public class ActNewRecording extends ActivityGroup
 				  ModInOutDetails modInOutDetails = new ModInOutDetails();
 				  modInOutDetails.setAmount(Float.valueOf(edtMoney.getText().toString()));
 				  modInOutDetails.setUserId(getSession().getUserId());
-				  modInOutDetails.setCreateTime(StringHelper.FormatDateTime(new Date()));
-				  modInOutDetails.setModifyTime(StringHelper.FormatDateTime(new Date()));
+				  modInOutDetails.setCreateTime(StringHelper.ToDateTime(new Date()));
+				  modInOutDetails.setModifyTime(StringHelper.ToDateTime(new Date()));
 				  modInOutDetails.setDisabled(0);
 				  modInOutDetails.setCategoryId((Integer) ((HashMap<String, Object>) sa.getItem(0)).get("id"));
 				  modInOutDetails.setCategoryChildId((Integer) ((HashMap<String, Object>) sa.getItem(1)).get("id"));
@@ -202,14 +202,14 @@ public class ActNewRecording extends ActivityGroup
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Incoming.getValue());
 					 modInOutDetails.setBusinessId((Integer) ((HashMap<String, Object>) sa.getItem(4)).get("id"));
-					 modInOutDetails.setDate(StringHelper.CovertDateToNoSplit(((HashMap<String, Object>) sa.getItem(5)).get("item").toString()));
+					 modInOutDetails.setDate(StringHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(5)).get("item").toString()));
 					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(6)).get("item").toString());
 				  }
 				  else if (currentTab == PAYOUT_TAB)
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Payout.getValue());
 					 modInOutDetails.setBusinessId(1);
-					 modInOutDetails.setDate(StringHelper.CovertDateToNoSplit(((HashMap<String, Object>) sa.getItem(4)).get("item").toString()));
+					 modInOutDetails.setDate(StringHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(4)).get("item").toString()));
 					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(5)).get("item").toString());
 				  }
 				  getDaoInOutDetails().InsertInOutDetails(modInOutDetails);
@@ -591,7 +591,7 @@ public class ActNewRecording extends ActivityGroup
 
 	  map = new HashMap<String, Object>();
 	  map.put("name", getResources().getString(R.string.d_date));
-	  map.put("item", StringHelper.FormatDate(new Date()));
+	  map.put("item", StringHelper.ToDate(new Date()));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();
