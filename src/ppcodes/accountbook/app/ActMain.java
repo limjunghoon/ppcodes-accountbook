@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import ppcodes.accountbook.app.R;
+import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.common.Session;
+import ppcodes.accountbook.dao.DaoInOutDetails;
 import ppcodes.android.common.Dialogs;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +33,7 @@ public class ActMain extends Activity
 {
    /** Called when the activity is first created. */
 
+   //属性
    Dialogs _dialogs;
    Dialogs getDialogs()
    {
@@ -38,16 +41,48 @@ public class ActMain extends Activity
 		 _dialogs=new Dialogs(this);
 	  return _dialogs;
    }
+   
+   Session _session;
+   Session getSession()
+   {
+	 if(_session==null)
+		_session=(Session)getApplicationContext();
+	 return _session;
+   }
+   
+   
+   DaoInOutDetails _daoInOutDetails;
+   DaoInOutDetails getDaoInOutDetails()
+   {
+	  if(_daoInOutDetails==null)
+	  {
+		 _daoInOutDetails=new DaoInOutDetails(this);
+	  }
+	  return _daoInOutDetails;
+   }
 
-   private ImageView imgMainStream;
-   private ImageView imgMainBuddgetBottom;
-   private ImageView imgMainConfig;
-   private ImageView imgMainAccount;
-   private ImageView imgMainReport;
-   private ListView listView;
-private ScrollView scrollView;
-   private ProgressBar proACTMainBudget;
+   //空件
+   ImageView imgMainStream;
+   ImageView imgMainBuddgetBottom;
+   ImageView imgMainConfig;
+   ImageView imgMainAccount;
+   ImageView imgMainReport;
+   ListView listView;
+   ScrollView scrollView;
+   ProgressBar proACTMainBudget;
+   TextView txtInMoney;
+   TextView txtOutMoney;
 
+   //字段
+   Date[] week=DateHelper.GetThisWeekDate(new Date());
+   Date[] month=DateHelper.GetThisMonthDate(new Date());
+   Float dayMoneyIn;
+   Float weekMoneyIn;
+   Float monthMoneyIn;
+   Float dayMoneyOut;
+   Float weekMoneyOut;
+   Float monthMoneyOut;
+	  
    
    // 动画效果
    void LoadingAnimation()
@@ -104,6 +139,9 @@ private ScrollView scrollView;
 	  imgMainConfig = (ImageView) findViewById(R.id.imgConfig_Act_main);
 
 	  // 正文部分
+	  txtInMoney=(TextView)findViewById(R.id.txtInMoney_Act_main);
+	  txtOutMoney=(TextView)findViewById(R.id.txtOutMoney_Act_main);
+	  
 	  proACTMainBudget = (ProgressBar) findViewById(R.id.proBudget_Act_main);
       listView=(ListView)findViewById(R.id.listviewJournal_Act_main);
 	  scrollView=(ScrollView)findViewById(R.id.scrollView1);
@@ -111,7 +149,6 @@ private ScrollView scrollView;
 	  // 顶部
 	  TextView txtACTMainView = (TextView) findViewById(R.id.txtDate_Act_main);
 	  txtACTMainView.setText(String.valueOf(new Date().getMonth() + 1) + "月");
-
 	  Session session = (Session) getApplicationContext();
 	  TextView txtUserName = (TextView) findViewById(R.id.txtUserName_Act_main);
 	  txtUserName.setText("当前帐号:" + session.getUserName());
@@ -138,7 +175,7 @@ private ScrollView scrollView;
 		 public void onClick(View v)
 		 {
 			// TODO Auto-generated method stub
-			Toast.makeText(ActMain.this, "OK1", 500).show();
+			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
 
@@ -148,7 +185,7 @@ private ScrollView scrollView;
 		 public void onClick(View v)
 		 {
 			// TODO Auto-generated method stub
-			Toast.makeText(ActMain.this, "OK2", 500).show();
+			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
 
@@ -158,7 +195,7 @@ private ScrollView scrollView;
 		 public void onClick(View v)
 		 {
 			// TODO Auto-generated method stub
-			Toast.makeText(ActMain.this, "OK3", 500).show();
+			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
 
@@ -168,7 +205,7 @@ private ScrollView scrollView;
 		 public void onClick(View v)
 		 {
 			// TODO Auto-generated method stub
-			Toast.makeText(ActMain.this, "OK4", 500).show();
+			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
 
@@ -176,36 +213,44 @@ private ScrollView scrollView;
 	 
    }
 
-   void LoadExpenseState()
-   {
-	  List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+   
+   List<Map<String, Object>> GetData()
+   {  
+
+      List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 	  Map<String, Object> map=new HashMap<String, Object>();
 	  map.put("img", R.drawable.main_today);
 	  map.put("day", (new Date()).getDay());
 	  map.put("dayName", "今天");
-	  map.put("dayDetails", StringHelper.ToDateChinese(new Date()));
-	  map.put("incoming", 8000);      
-	  map.put("payout", 10000);
+	  map.put("dayDetails", DateHelper.ToDateChinese(new Date()));
+	  map.put("incoming", dayMoneyIn);      
+	  map.put("payout", dayMoneyOut);
 	  list.add(map);
 	  
 	  map=new HashMap<String, Object>();
 	  map.put("img", R.drawable.main_week);
 	  map.put("day", "");
 	  map.put("dayName", "本周");
-	  map.put("dayDetails", StringHelper.ToDateChineseDay(new Date()));
-	  map.put("incoming", 28000);
-	  map.put("payout", 310000);
+	  map.put("dayDetails", DateHelper.ToDateChineseDay(week[0])+"-"+DateHelper.ToDateChineseDay(week[1]));
+	  map.put("incoming", weekMoneyIn);
+	  map.put("payout", weekMoneyOut);
 	  list.add(map);
 	  
 	  map=new HashMap<String, Object>();
 	  map.put("img", R.drawable.main_week);
 	  map.put("day", "");
 	  map.put("dayName", "本月");
-	  map.put("dayDetails", StringHelper.ToDateChineseDay(new Date()));
-	  map.put("incoming", 428000);
-	  map.put("payout", 5310000);
+	  map.put("dayDetails", DateHelper.ToDateChineseDay(month[0])+"-"+DateHelper.ToDateChineseDay(month[1]));
+	  map.put("incoming", monthMoneyIn);
+	  map.put("payout", monthMoneyOut);
 	  list.add(map);
-	
+	  return list;
+   }
+   
+   void LoadExpenseState()
+   {
+	  List<Map<String, Object>> list=GetData();
+
 	  SimpleAdapter sAdapter=new SimpleAdapter(ActMain.this, list, R.layout.listview_main, 
 			new String[]{"img","day","dayName","dayDetails","incoming","payout"}, 
 			new int[]{R.id.img_listview_main,R.id.txtDate_listview_main,R.id.txtDate2_listview_main,
@@ -216,12 +261,23 @@ private ScrollView scrollView;
 //      scrollView.scrollTo(0, 0);
    }
    
-   // nCreate
+   // onCreate
    @Override
    public void onCreate(Bundle savedInstanceState)
    {
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.act_main);
+	  
+	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), new Date());
+	  weekMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
+	  monthMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), month[0], month[1]);
+	  dayMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), new Date());
+	  weekMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), week[0], week[1]);
+	  monthMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), month[0], month[1]);
+	  
+//	  txtInMoney.setText(String.valueOf(monthMoneyIn));
+//	  txtOutMoney.setText(String.valueOf(monthMoneyOut));
+	  
 	  InitControls();
 	  InitControlsListener();
 

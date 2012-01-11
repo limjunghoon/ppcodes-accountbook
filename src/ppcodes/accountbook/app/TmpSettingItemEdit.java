@@ -14,7 +14,7 @@ import ppcodes.accountbook.entity.model.ModBusiness;
 import ppcodes.accountbook.entity.model.ModCategory;
 import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import ppcodes.android.common.gvImageAdapter;
 import android.app.Activity;
 import android.content.Context;
@@ -152,7 +152,7 @@ public class TmpSettingItemEdit extends Activity
 			 ModCategory modCategory=new ModCategory();
 			 modCategory.setCategoryName(sName);
 			 modCategory.setUserId(getSession().getUserId());
-			 modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
+			 modCategory.setModifyTime(DateHelper.ToDateTime(new Date()));
 			 modCategory.setIcon(imgName);
 			 
 			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
@@ -170,7 +170,7 @@ public class TmpSettingItemEdit extends Activity
 			 ModCategory modCategory=new ModCategory();
 			 modCategory.setCategoryName(sName);
 			 modCategory.setUserId(getSession().getUserId());
-			 modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
+			 modCategory.setModifyTime(DateHelper.ToDateTime(new Date()));
 			 modCategory.setIcon(imgName);
 			 
 			 if(getDaoCategory().UpdateCategory(modCategory, itemName))
@@ -187,7 +187,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModAccount modAccount=new ModAccount();
 			 modAccount.setAccountName(sName);
-			 modAccount.setModifyTime(StringHelper.ToDateTime(new Date()));
+			 modAccount.setModifyTime(DateHelper.ToDateTime(new Date()));
 			 modAccount.setUserId(getSession().getUserId());
 			 
 			 if(getDaoAccount().UpdateAccountName(modAccount, itemName))
@@ -204,7 +204,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModProject modProject=new ModProject();
 			 modProject.setProjectName(sName);
-			 modProject.setModifyTime(StringHelper.ToDateTime(new Date()));
+			 modProject.setModifyTime(DateHelper.ToDateTime(new Date()));
 			 modProject.setUserId(getSession().getUserId());
 			 
 			 if(getDaoProject().UpdateProjectName(modProject, itemName))
@@ -221,7 +221,7 @@ public class TmpSettingItemEdit extends Activity
 		  {
 			 ModBusiness modBusiness=new ModBusiness();
 			 modBusiness.setBusinessName(sName);
-			 modBusiness.setModifyTime(StringHelper.ToDateTime(new Date()));
+			 modBusiness.setModifyTime(DateHelper.ToDateTime(new Date()));
 			 modBusiness.setUserId(getSession().getUserId());
 			 
 			 if(getDaoBusiness().UpdateBusinessName(modBusiness, itemName))

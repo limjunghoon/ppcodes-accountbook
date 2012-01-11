@@ -53,7 +53,7 @@
                             android:text="@string/txtIn"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                         <TextView
-                            android:id="@+id/txtInNum"
+                            android:id="@+id/txtInMoney_Act_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="10000"
@@ -76,7 +76,7 @@
                             android:text="@string/txtOut"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                         <TextView
-                            android:id="@+id/txtOutNum"
+                            android:id="@+id/txtOutMoney_Act_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="7000"
@@ -99,7 +99,7 @@
                             android:text="@string/txtBudget"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                         <TextView
-                            android:id="@+id/txtBudgetNum"
+                            android:id="@+id/txtBudgetMoney_Act_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5000"
@@ -122,7 +122,7 @@
                             android:text="@string/txtBudgetBalance"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                         <TextView
-                            android:id="@+id/txtBudgetBalanceNum"
+                            android:id="@+id/txtBudgetBalanceMoney_Act_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="4000"

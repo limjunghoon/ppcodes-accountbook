@@ -3,7 +3,7 @@ package ppcodes.accountbook.dao;
 import java.util.Date;
 
 import ppcodes.android.common.DBHelper;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -20,7 +20,7 @@ public class DaoInitDataBase extends DaoBase
    {
 	  SQLiteDatabase db = null;
 
-	  String nowTime=StringHelper.ToDateTime(new Date());
+	  String nowTime=DateHelper.ToDateTime(new Date());
 	  try
 	  {  //初始化Business
 		 String sqlBusiness = "INSERT INTO [Business] (UserId,BusinessName,CreateTime,ModifyTime,Disabled,UseCount)" +
