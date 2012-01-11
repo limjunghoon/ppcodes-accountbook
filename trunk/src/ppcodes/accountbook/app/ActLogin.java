@@ -13,7 +13,7 @@ import ppcodes.accountbook.dao.DaoProfile;
 import ppcodes.accountbook.dao.DaoUserInfo;
 import ppcodes.accountbook.entity.model.ModUserInfo;
 import ppcodes.android.common.Dialogs;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import android.R.integer;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -105,7 +105,7 @@ public class ActLogin extends Activity
 //						Looper.loop();
 //						Looper.prepare();
 						getDialogs().ShowLoadingDialogNoTitle("请稍候。。。");
-                        String nowTime=StringHelper.ToDateTime(new Date());
+                        String nowTime=DateHelper.ToDateTime(new Date());
 						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
 						daoLogin.InsertUser(modUserInfo);
 						uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());

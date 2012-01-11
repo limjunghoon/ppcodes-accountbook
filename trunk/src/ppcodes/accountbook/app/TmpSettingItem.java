@@ -24,7 +24,7 @@ import ppcodes.accountbook.entity.model.ModCategory;
 import ppcodes.accountbook.entity.model.ModProfile;
 import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import ppcodes.android.common.gvImageAdapter;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -289,8 +289,8 @@ public class TmpSettingItem extends Activity
 	    modCategory.setInOrOut(Enums.InOrOut.Incoming.getValue());
 	    modCategory.setCategoryName(edtNewItem.getText().toString());
 	    modCategory.setIcon(imgName);
-	    modCategory.setCreateTime(StringHelper.ToDateTime(new Date()));
-	    modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
+	    modCategory.setCreateTime(DateHelper.ToDateTime(new Date()));
+	    modCategory.setModifyTime(DateHelper.ToDateTime(new Date()));
 	    modCategory.setDisabled(0);
 	    modCategory.setUseCount(0); 
         
@@ -321,8 +321,8 @@ public class TmpSettingItem extends Activity
 	    modCategory.setInOrOut(Enums.InOrOut.Payout.getValue());
 	    modCategory.setCategoryName(edtNewItem.getText().toString());
 	    modCategory.setIcon(imgName);
-	    modCategory.setCreateTime(StringHelper.ToDateTime(new Date()));
-	    modCategory.setModifyTime(StringHelper.ToDateTime(new Date()));
+	    modCategory.setCreateTime(DateHelper.ToDateTime(new Date()));
+	    modCategory.setModifyTime(DateHelper.ToDateTime(new Date()));
 	    modCategory.setDisabled(0);
 	    modCategory.setUseCount(0); 
 	    
@@ -346,7 +346,7 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加账户
 	  else if (SETTING_TYPE == Enums.ItemType.Account.getValue())
 	  {
-		 ModAccount modAccount = new ModAccount(getSession().getUserId(), edtNewItem.getText().toString().trim(), 0, 0, StringHelper.ToDateTime(new Date()), StringHelper.ToDateTime(new Date()));
+		 ModAccount modAccount = new ModAccount(getSession().getUserId(), edtNewItem.getText().toString().trim(), 0, 0, DateHelper.ToDateTime(new Date()), DateHelper.ToDateTime(new Date()));
 		 if (getDaoAccount().InsertAccount(modAccount))
 		 {
 			LoadSetting();
@@ -359,7 +359,7 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加项目
 	  else if (SETTING_TYPE == Enums.ItemType.Project.getValue())
 	  {
-		 ModProject modProject = new ModProject(getSession().getUserId(), edtNewItem.getText().toString().trim(), 0, 0, StringHelper.ToDateTime(new Date()), StringHelper.ToDateTime(new Date()));
+		 ModProject modProject = new ModProject(getSession().getUserId(), edtNewItem.getText().toString().trim(), 0, 0, DateHelper.ToDateTime(new Date()), DateHelper.ToDateTime(new Date()));
 		 if (getDaoProject().InsertProject(modProject))
 		 {
 			LoadSetting();
@@ -372,7 +372,7 @@ public class TmpSettingItem extends Activity
 	  // ---------------------------------添加商家
 	  else if (SETTING_TYPE == Enums.ItemType.Business.getValue())
 	  {
-		 ModBusiness modBusiness = new ModBusiness(getSession().getUserId(), edtNewItem.getText().toString().trim(), StringHelper.ToDateTime(new Date()), StringHelper.ToDateTime(new Date()), 0, 0);
+		 ModBusiness modBusiness = new ModBusiness(getSession().getUserId(), edtNewItem.getText().toString().trim(), DateHelper.ToDateTime(new Date()), DateHelper.ToDateTime(new Date()), 0, 0);
 		 if (getDaoBusiness().InsertBusiness(modBusiness))
 		 {
 			LoadSetting();
@@ -392,7 +392,7 @@ public class TmpSettingItem extends Activity
    {
 	  ModProfile modProfile = new ModProfile();
 	  modProfile.setUserId(getSession().getUserId());
-	  modProfile.setModifyTime(StringHelper.ToDate(new Date()));
+	  modProfile.setModifyTime(DateHelper.ToDate(new Date()));
 	  
 	  if (SETTING_TYPE == Enums.ItemType.Incoming.getValue())
 	  {
@@ -502,7 +502,7 @@ public class TmpSettingItem extends Activity
 					 ModCategory modCategory = new ModCategory();
 					 modCategory.setCategoryName(sName);
 					 modCategory.setParentCategoryId(getDaoCategory().GetCategoryId(sName));
-					 modCategory.setModifyTime(StringHelper.ToDate(new Date()));
+					 modCategory.setModifyTime(DateHelper.ToDate(new Date()));
 					 modCategory.setUserId(getSession().getUserId());
 					 if(getDaoCategory().DeleteCategory(modCategory))
 					 {
@@ -569,7 +569,7 @@ public class TmpSettingItem extends Activity
 					 ModCategory modCategory = new ModCategory();
 					 modCategory.setCategoryName(sName);
 					 modCategory.setParentCategoryId(getDaoCategory().GetCategoryId(sName));
-					 modCategory.setModifyTime(StringHelper.ToDate(new Date()));
+					 modCategory.setModifyTime(DateHelper.ToDate(new Date()));
 					 modCategory.setUserId(getSession().getUserId());
 					 if(getDaoCategory().DeleteCategory(modCategory))
 					 {
@@ -632,7 +632,7 @@ public class TmpSettingItem extends Activity
 					 }
 					 ModProject modProject = new ModProject();
 					 modProject.setProjectName(sName);
-					 modProject.setModifyTime(StringHelper.ToDate(new Date()));
+					 modProject.setModifyTime(DateHelper.ToDate(new Date()));
 					 getDaoProject().DeleteProject(modProject);
 					 LoadSetting();
 					 break;
@@ -682,7 +682,7 @@ public class TmpSettingItem extends Activity
 					 }
 					 ModAccount modAccount = new ModAccount();
 					 modAccount.setAccountName(sName);
-					 modAccount.setModifyTime(StringHelper.ToDate(new Date()));
+					 modAccount.setModifyTime(DateHelper.ToDate(new Date()));
 					 getDaoAccount().DeleteAccount(modAccount);
 					 LoadSetting();
 					 break;
@@ -732,7 +732,7 @@ public class TmpSettingItem extends Activity
 					 }
 					 ModBusiness modBusiness = new ModBusiness();
 					 modBusiness.setBusinessName(txtName.getText().toString());
-					 modBusiness.setModifyTime(StringHelper.ToDate(new Date()));
+					 modBusiness.setModifyTime(DateHelper.ToDate(new Date()));
 					 getDaoBusiness().DeleteBusiness(modBusiness);
 					 LoadSetting();
 					 break;

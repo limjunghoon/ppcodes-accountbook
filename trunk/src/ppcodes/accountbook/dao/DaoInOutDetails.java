@@ -1,11 +1,15 @@
 package ppcodes.accountbook.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import ppcodes.accountbook.common.Enums;
 import ppcodes.accountbook.entity.model.ModBusiness;
 import ppcodes.accountbook.entity.model.ModInOutDetails;
 import ppcodes.android.common.DBHelper;
+import ppcodes.android.common.DateHelper;
+import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -87,6 +91,97 @@ public class DaoInOutDetails extends DaoBase
 	  return null;// 默认为存在防止多重添加
    }
 
+   
+   public Float GetInOutAmount(int UserId,int InOrOut, Date beginDate, Date endDate)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  try
+	  {
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery("Select sum(Amount) as Amount From [InOutDetails]"+
+                             " WHERE InOrOut=? and [Disabled]=0 and [UserId]=? and Date between ? and ?", 
+			                 new String[] { String.valueOf(InOrOut),String.valueOf(UserId), DateHelper.ToDateNoSplit(beginDate),DateHelper.ToDateNoSplit(endDate)});
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
+		 {
+            Float f=Float.valueOf(0);
+			do
+			{
+			   f=cursor.getFloat(0);
+			} 
+			while (cursor.moveToNext());
+			return f;
+		 }
+		 else
+		 {
+			return Float.valueOf(0);// cursor为空，表示出了异常
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 Log.e("ERROR", e.getMessage() + "DaoBusiness.GetAllInOutDetailsByUserId（）");
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;// 默认为存在防止多重添加
+   }
+   
+   public Float GetInOutAmount(int UserId,int InOrOut, Date date)
+   {
+	  SQLiteDatabase db = null;
+	  Cursor cursor = null;
+	  try
+	  {
+		 db = dbHelper.getReadableDatabase();
+		 cursor = db.rawQuery("Select sum(Amount) as Amount From [InOutDetails]"+
+                             " WHERE InOrOut=? and [Disabled]=0 and [UserId]=? and Date=?",
+			                 new String[] { String.valueOf(InOrOut),String.valueOf(UserId), DateHelper.ToDateNoSplit(date)});
+		 if (cursor.moveToFirst() && cursor.getCount() > 0)// 判断不为空
+		 {
+            Float f=Float.valueOf(0);
+			do
+			{
+			   f=cursor.getFloat(0);
+			} 
+			while (cursor.moveToNext());
+			return f;
+		 }
+		 else
+		 {
+			return Float.valueOf(0);// cursor为空，表示出了异常
+		 }
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 Log.e("ERROR", e.getMessage() + "DaoBusiness.GetAllInOutDetailsByUserId（）");
+		 e.printStackTrace();
+	  }
+	  finally
+	  {
+		 if (db != null)
+		 {
+			db.close();
+		 }
+		 if (cursor != null)
+		 {
+			cursor.close();
+		 }
+	  }
+	  return null;// 默认为存在防止多重添加
+   }
+   
    /**
     * @param modInOutDetails
     * @return false表示插入失败或者已经存在用户 true表示插入成功

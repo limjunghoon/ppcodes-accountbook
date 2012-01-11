@@ -25,7 +25,7 @@ import ppcodes.accountbook.entity.model.ModInOutDetails;
 import ppcodes.accountbook.entity.model.ModProfileForAdd;
 import ppcodes.accountbook.entity.model.ModProject;
 import ppcodes.android.common.Dialogs;
-import ppcodes.android.common.StringHelper;
+import ppcodes.android.common.DateHelper;
 import ppcodes.android.common.gvTabAdapter;
 import android.app.ActivityGroup;
 import android.app.DatePickerDialog;
@@ -191,8 +191,8 @@ public class ActNewRecording extends ActivityGroup
 				  ModInOutDetails modInOutDetails = new ModInOutDetails();
 				  modInOutDetails.setAmount(Float.valueOf(edtMoney.getText().toString()));
 				  modInOutDetails.setUserId(getSession().getUserId());
-				  modInOutDetails.setCreateTime(StringHelper.ToDateTime(new Date()));
-				  modInOutDetails.setModifyTime(StringHelper.ToDateTime(new Date()));
+				  modInOutDetails.setCreateTime(DateHelper.ToDateTime(new Date()));
+				  modInOutDetails.setModifyTime(DateHelper.ToDateTime(new Date()));
 				  modInOutDetails.setDisabled(0);
 				  modInOutDetails.setCategoryId((Integer) ((HashMap<String, Object>) sa.getItem(0)).get("id"));
 				  modInOutDetails.setCategoryChildId((Integer) ((HashMap<String, Object>) sa.getItem(1)).get("id"));
@@ -201,16 +201,16 @@ public class ActNewRecording extends ActivityGroup
 				  if (currentTab == INCOMING_TAB)
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Incoming.getValue());
-					 modInOutDetails.setBusinessId((Integer) ((HashMap<String, Object>) sa.getItem(4)).get("id"));
-					 modInOutDetails.setDate(StringHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(5)).get("item").toString()));
-					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(6)).get("item").toString());
+					 modInOutDetails.setBusinessId(1);
+					 modInOutDetails.setDate(DateHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(4)).get("item").toString()));
+					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(5)).get("item").toString());
 				  }
 				  else if (currentTab == PAYOUT_TAB)
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Payout.getValue());
-					 modInOutDetails.setBusinessId(1);
-					 modInOutDetails.setDate(StringHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(4)).get("item").toString()));
-					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(5)).get("item").toString());
+					 modInOutDetails.setBusinessId((Integer) ((HashMap<String, Object>) sa.getItem(4)).get("id"));
+					 modInOutDetails.setDate(DateHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(5)).get("item").toString()));
+					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(6)).get("item").toString());
 				  }
 				  getDaoInOutDetails().InsertInOutDetails(modInOutDetails);
 				  finish();
@@ -329,7 +329,7 @@ public class ActNewRecording extends ActivityGroup
 			break;
 
 		 case 4:
-			if (currentTab == INCOMING_TAB)// 收入的商家====================
+			if (currentTab == PAYOUT_TAB)// 收入的商家====================
 			{
 			   List<ModBusiness> list5 = getDaoBusiness().GetAllBusinessByUserIdForAdd(getSession().getUserId());
 			   SimpleAdapter sAdapter5 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Business.getValue(), list5), R.layout.listview_text_id, new String[] { "name", "id" },
@@ -580,7 +580,7 @@ public class ActNewRecording extends ActivityGroup
 	  map.put("id", modProfileForAdd.getAccountId());
 	  list.add(map);
 
-	  if (index == 0)
+	  if (index == 1)
 	  {
 		 map = new HashMap<String, Object>();
 		 map.put("name", getResources().getString(R.string.d_business));
@@ -591,7 +591,7 @@ public class ActNewRecording extends ActivityGroup
 
 	  map = new HashMap<String, Object>();
 	  map.put("name", getResources().getString(R.string.d_date));
-	  map.put("item", StringHelper.ToDate(new Date()));
+	  map.put("item", DateHelper.ToDate(new Date()));
 	  list.add(map);
 
 	  map = new HashMap<String, Object>();

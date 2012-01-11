@@ -24,7 +24,7 @@ public class DaoBusiness extends DaoBase
    // {
    // SQLiteDatabase db = null;
    //
-   // String nowTime=StringHelper.FormatDate(new Date());
+   // String nowTime=DateHelper.FormatDate(new Date());
    // try
    // {
    // String sqlString =
