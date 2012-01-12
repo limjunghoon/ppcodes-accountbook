@@ -12,6 +12,7 @@ import ppcodes.accountbook.common.Session;
 import ppcodes.accountbook.dao.DaoInOutDetails;
 import ppcodes.android.common.Dialogs;
 import ppcodes.android.common.DateHelper;
+import android.R.integer;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -72,17 +73,18 @@ public class ActMain extends Activity
    ProgressBar proACTMainBudget;
    TextView txtInMoney;
    TextView txtOutMoney;
+   Button btnNew;
 
    //字段
-   Date[] week=DateHelper.GetThisWeekDate(new Date());
-   Date[] month=DateHelper.GetThisMonthDate(new Date());
+   Date[] week=DateHelper.GetThisWeekDate(new Date());//得到本周起始结束日期
+   Date[] month=DateHelper.GetThisMonthDate(new Date());//得到本月起始结束日期
    Float dayMoneyIn;
    Float weekMoneyIn;
    Float monthMoneyIn;
    Float dayMoneyOut;
    Float weekMoneyOut;
    Float monthMoneyOut;
-	  
+   final int NEWRECORD=1;
    
    // 动画效果
    void LoadingAnimation()
@@ -139,6 +141,7 @@ public class ActMain extends Activity
 	  imgMainConfig = (ImageView) findViewById(R.id.imgConfig_Act_main);
 
 	  // 正文部分
+	  btnNew = (Button) findViewById(R.id.btnNewAccount_Act_main);
 	  txtInMoney=(TextView)findViewById(R.id.txtInMoney_Act_main);
 	  txtOutMoney=(TextView)findViewById(R.id.txtOutMoney_Act_main);
 	  
@@ -157,6 +160,19 @@ public class ActMain extends Activity
    // 初始化监视器
    void InitControlsListener()
    {
+	  //新记一笔帐
+	  btnNew.setOnClickListener(new Button.OnClickListener()
+	  {
+		 @Override
+		 public void onClick(View v)
+		 {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent();
+			intent.setClass(ActMain.this, ActNewRecording.class);
+			startActivityForResult(intent, NEWRECORD);
+		 }
+	  });
+	  //设置
 	  imgMainConfig.setOnClickListener(new View.OnClickListener()
 	  {
 		 @Override
@@ -168,7 +184,7 @@ public class ActMain extends Activity
 			startActivity(intent);
 		 }
 	  });
-
+      //流水
 	  imgMainStream.setOnClickListener(new View.OnClickListener()
 	  {
 		 @Override
@@ -178,7 +194,7 @@ public class ActMain extends Activity
 			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
-
+      //预算
 	  imgMainBuddgetBottom.setOnClickListener(new View.OnClickListener()
 	  {
 		 @Override
@@ -188,7 +204,7 @@ public class ActMain extends Activity
 			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
-
+      //报表
 	  imgMainReport.setOnClickListener(new View.OnClickListener()
 	  {
 		 @Override
@@ -198,7 +214,7 @@ public class ActMain extends Activity
 			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
-
+      //贷款
 	  imgMainAccount.setOnClickListener(new View.OnClickListener()
 	  {
 		 @Override
@@ -208,12 +224,9 @@ public class ActMain extends Activity
 			getDialogs().ShowOKAlertDialog("", "建设中");
 		 }
 	  });
-
-	  
-	 
    }
 
-   
+   //返回今天本周和本月的情况
    List<Map<String, Object>> GetData()
    {  
 
@@ -247,6 +260,7 @@ public class ActMain extends Activity
 	  return list;
    }
    
+   //将今天本周和本月的情况加载列表
    void LoadExpenseState()
    {
 	  List<Map<String, Object>> list=GetData();
@@ -256,18 +270,11 @@ public class ActMain extends Activity
 			new int[]{R.id.img_listview_main,R.id.txtDate_listview_main,R.id.txtDate2_listview_main,
 			R.id.txtDateDetails_listview_main,R.id.txtIncoming_listview_main,R.id.txtPayout_listview_main});
 	  listView.setAdapter(sAdapter);
-	  
-//      scrollView.fullScroll(View.FOCUS_UP);
-//      scrollView.scrollTo(0, 0);
    }
    
-   // onCreate
-   @Override
-   public void onCreate(Bundle savedInstanceState)
+   //获取今天本周本月的钱数 
+   void LoadExpenseMoney()
    {
-	  super.onCreate(savedInstanceState);
-	  setContentView(R.layout.act_main);
-	  
 	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), new Date());
 	  weekMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
 	  monthMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), month[0], month[1]);
@@ -275,38 +282,61 @@ public class ActMain extends Activity
 	  weekMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), week[0], week[1]);
 	  monthMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), month[0], month[1]);
 	  
-//	  txtInMoney.setText(String.valueOf(monthMoneyIn));
-//	  txtOutMoney.setText(String.valueOf(monthMoneyOut));
-	  
+   }
+   
+   
+   //=====================onCreate===========================
+   @Override
+   public void onCreate(Bundle savedInstanceState)
+   {
+	  super.onCreate(savedInstanceState);
+	  setContentView(R.layout.act_main);
+
+	  LoadExpenseMoney();
+
 	  InitControls();
 	  InitControlsListener();
-
 	  
-	  Button btnNew = (Button) findViewById(R.id.btnNewAccount_Act_main);
-	  btnNew.setOnClickListener(new Button.OnClickListener()
+	  try
 	  {
-		 @Override
-		 public void onClick(View v)
-		 {
-			// TODO Auto-generated method stub
-			Intent intent = new Intent();
-			intent.setClass(ActMain.this, ActNewRecording.class);
-			startActivity(intent);
-		 }
-	  });
-
+	    txtInMoney.setText(String.valueOf(monthMoneyIn));
+	    txtOutMoney.setText(String.valueOf(monthMoneyOut));
+	  }
+	  catch (Exception e)
+	  {
+		 // TODO: handle exception
+		 getDialogs().ShowOKAlertDialog("ERROR","onCreate-"+e.getMessage()+e.getStackTrace());
+	  }
+	  
 	  LoadingAnimation();
 	  LoadExpenseState();
-      scrollView.fullScroll(View.FOCUS_UP);
-      scrollView.scrollBy(0, 0);
-      scrollView.scrollTo(0, 0);
-      
+      scrollView.post(new Runnable()
+	  {
+	     @Override
+	     public void run()
+	     {
+	  	  // TODO Auto-generated method stub
+	  	   scrollView.fullScroll(View.FOCUS_UP); 
+	     }
+	  });
    }
 
-   
-   
-   
-   
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data)
+   {
+	  // TODO Auto-generated method stub
+      switch (requestCode)
+	  {
+		 case NEWRECORD://从增加页面返回时，更新数据
+			LoadExpenseMoney();
+			LoadExpenseState();
+			break;
+
+		 default:
+			break;
+	  }
+   }
+
    // 按下返回键退出
    @Override
    public boolean onKeyDown(int keyCode, KeyEvent event)

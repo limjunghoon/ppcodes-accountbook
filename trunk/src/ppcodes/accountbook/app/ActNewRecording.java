@@ -164,7 +164,15 @@ public class ActNewRecording extends ActivityGroup
 		 public void onItemClick(AdapterView<?> parentView, View currentView, int position, long arg3)
 		 {
 			// TODO Auto-generated method stub
-			ListViewClick(parentView, currentView, position);
+			try
+			{
+			   ListViewClick(parentView, currentView, position);
+			}
+			catch (Exception e)
+			{
+			   // TODO: handle exception
+			   getDialogs().ShowOKAlertDialog("ERROR", "ListViewClick-"+e.getMessage());
+			}
 		 }
 	  });
 
@@ -194,10 +202,10 @@ public class ActNewRecording extends ActivityGroup
 				  modInOutDetails.setCreateTime(DateHelper.ToDateTime(new Date()));
 				  modInOutDetails.setModifyTime(DateHelper.ToDateTime(new Date()));
 				  modInOutDetails.setDisabled(0);
-				  modInOutDetails.setCategoryId((Integer) ((HashMap<String, Object>) sa.getItem(0)).get("id"));
-				  modInOutDetails.setCategoryChildId((Integer) ((HashMap<String, Object>) sa.getItem(1)).get("id"));
-				  modInOutDetails.setProjectId((Integer) ((HashMap<String, Object>) sa.getItem(2)).get("id"));
-				  modInOutDetails.setAccountId((Integer) ((HashMap<String, Object>) sa.getItem(3)).get("id"));
+				  modInOutDetails.setCategoryId(Integer.parseInt((((HashMap<String, Object>) sa.getItem(0)).get("id")).toString()));
+				  modInOutDetails.setCategoryChildId(Integer.parseInt((((HashMap<String, Object>) sa.getItem(1)).get("id")).toString()));
+				  modInOutDetails.setProjectId(Integer.parseInt((((HashMap<String, Object>) sa.getItem(2)).get("id")).toString()));
+				  modInOutDetails.setAccountId(Integer.parseInt((((HashMap<String, Object>) sa.getItem(3)).get("id")).toString()));
 				  if (currentTab == INCOMING_TAB)
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Incoming.getValue());
@@ -208,17 +216,19 @@ public class ActNewRecording extends ActivityGroup
 				  else if (currentTab == PAYOUT_TAB)
 				  {
 					 modInOutDetails.setInOrOut(Enums.InOrOut.Payout.getValue());
-					 modInOutDetails.setBusinessId((Integer) ((HashMap<String, Object>) sa.getItem(4)).get("id"));
+					 modInOutDetails.setBusinessId(Integer.parseInt((((HashMap<String, Object>) sa.getItem(4)).get("id")).toString()));
 					 modInOutDetails.setDate(DateHelper.DelDateSplit(((HashMap<String, Object>) sa.getItem(5)).get("item").toString()));
-					 modInOutDetails.setRemarks(((HashMap<String, Object>) sa.getItem(6)).get("item").toString());
+					 modInOutDetails.setRemarks(((HashMap<String,Object>) sa.getItem(6)).get("item").toString());
 				  }
 				  getDaoInOutDetails().InsertInOutDetails(modInOutDetails);
+				  setResult(RESULT_OK);
 				  finish();
 			   }
-			}
+			}                                        
 			catch (Exception e)
 			{
 			   // TODO: handle exception
+			   getDialogs().ShowOKAlertDialog("ERROR", "btnOK.setOnClickListener-"+e.getMessage());
 			   e.printStackTrace();
 			}
 		 }
@@ -329,7 +339,7 @@ public class ActNewRecording extends ActivityGroup
 			break;
 
 		 case 4:
-			if (currentTab == PAYOUT_TAB)// 收入的商家====================
+			if (currentTab == PAYOUT_TAB)// 支出的商家====================
 			{
 			   List<ModBusiness> list5 = getDaoBusiness().GetAllBusinessByUserIdForAdd(getSession().getUserId());
 			   SimpleAdapter sAdapter5 = new SimpleAdapter(ActNewRecording.this, getData(Enums.AddRecord.Business.getValue(), list5), R.layout.listview_text_id, new String[] { "name", "id" },
@@ -341,7 +351,7 @@ public class ActNewRecording extends ActivityGroup
 			   getDialogs().ShowCustomViewDialog(null, listView5, 80, 70);
 			   break;
 			}
-			else if (currentTab == PAYOUT_TAB)// 支出的日期==================
+			else if (currentTab == INCOMING_TAB)// 收入的日期==================
 			{
 			   final Calendar cd = Calendar.getInstance();
 			   cd.setTime(new Date());
@@ -359,7 +369,7 @@ public class ActNewRecording extends ActivityGroup
 			break;
 
 		 case 5:
-			if (currentTab == INCOMING_TAB)// 收入的日期====================
+			if (currentTab == PAYOUT_TAB)// 支出的日期====================
 			{
 			   final Calendar cd = Calendar.getInstance();
 			   cd.setTime(new Date());
@@ -374,7 +384,7 @@ public class ActNewRecording extends ActivityGroup
 				  }
 			   }, cd.get(Calendar.YEAR), cd.get(Calendar.MONTH), cd.get(Calendar.DAY_OF_MONTH)).show();
 			}
-			else if (currentTab == PAYOUT_TAB)// 支出的备注=================
+			else if (currentTab == INCOMING_TAB)// 收入的备注=================
 			{
 			   final EditText edtComment = new EditText(ActNewRecording.this);
 			   edtComment.setSingleLine(false);
@@ -397,7 +407,7 @@ public class ActNewRecording extends ActivityGroup
 			}
 			break;
 
-		 case 6:// 收入的备注
+		 case 6:// 支出的备注
 			final EditText edtComment = new EditText(ActNewRecording.this);
 			edtComment.setSingleLine(false);
 			final SimpleAdapter sa = (SimpleAdapter) listView.getAdapter();
@@ -622,9 +632,10 @@ public class ActNewRecording extends ActivityGroup
 		 {
 			listCache.remove(PAYOUT_TAB);
 			listCache.put(PAYOUT_TAB, currentAdapter);
+			
 		 }
 		 listView.setAdapter((SimpleAdapter) listCache.get(INCOMING_TAB));
-	  }
+      }
 	  else if (id == PAYOUT_TAB)
 	  {
 		 if (listCache.get(PAYOUT_TAB) == null)
@@ -639,9 +650,11 @@ public class ActNewRecording extends ActivityGroup
 		 {
 			listCache.remove(INCOMING_TAB);
 			listCache.put(INCOMING_TAB, currentAdapter);
+			
 		 }
 		 listView.setAdapter((SimpleAdapter) listCache.get(PAYOUT_TAB));
-	  }
+	  }		 
+	  parentName=((HashMap<String, Object>)listView.getAdapter().getItem(0)).get("item").toString();
 	  currentTab = id;
 	  tabAdapter.SetFocus(id);// 选中项获得高亮
    }
@@ -690,6 +703,7 @@ public class ActNewRecording extends ActivityGroup
    {
 	  if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
 	  { // 按下的如果是BACK，同时没有重复
+		 setResult(RESULT_CANCELED);
 		 finish();
 	  }
 	  return false;
