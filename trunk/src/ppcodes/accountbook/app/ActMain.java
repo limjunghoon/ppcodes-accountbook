@@ -61,6 +61,8 @@ public class ActMain extends Activity
 	  }
 	  return _daoInOutDetails;
    }
+   
+   
 
    //空件
    ImageView imgMainStream;
@@ -229,7 +231,6 @@ public class ActMain extends Activity
    //返回今天本周和本月的情况
    List<Map<String, Object>> GetData()
    {  
-
       List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 	  Map<String, Object> map=new HashMap<String, Object>();
 	  map.put("img", R.drawable.main_today);
@@ -259,7 +260,7 @@ public class ActMain extends Activity
 	  list.add(map);
 	  return list;
    }
-   
+  
    //将今天本周和本月的情况加载列表
    void LoadExpenseState()
    {
@@ -275,15 +276,23 @@ public class ActMain extends Activity
    //获取今天本周本月的钱数 
    void LoadExpenseMoney()
    {
-	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), new Date());
-	  weekMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
-	  monthMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), month[0], month[1]);
-	  dayMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), new Date());
-	  weekMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), week[0], week[1]);
-	  monthMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), month[0], month[1]);
-	  
+	  try
+      {
+      	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
+      	  monthMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), month[0], month[1]);
+      	  dayMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), new Date());
+      	  weekMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), week[0], week[1]);
+      	  monthMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), month[0], month[1]);
+      	  
+      	  txtInMoney.setText(String.valueOf(monthMoneyIn));
+      	  txtOutMoney.setText(String.valueOf(monthMoneyOut));
+      }
+      catch (Exception e)
+      {
+	    // TODO: handle exception
+	    getDialogs().ShowOKAlertDialog("ERROR", "LoadExpenseMoney-"+e.getMessage()+e.getStackTrace());
+      }
    }
-   
    
    //=====================onCreate===========================
    @Override
@@ -321,6 +330,7 @@ public class ActMain extends Activity
 	  });
    }
 
+   
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data)
    {
