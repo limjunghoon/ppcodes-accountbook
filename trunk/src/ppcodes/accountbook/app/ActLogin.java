@@ -53,9 +53,27 @@ public class ActLogin extends Activity
 	  }
 	  return _dialogs;
    }
-   private DaoUserInfo daoLogin;
-   private DaoInitDataBase daoInitDataBase;
-
+   
+   DaoUserInfo _daoUserInfo;
+   DaoUserInfo getDaoUserInfo()
+   {
+	  if(_daoUserInfo==null)
+	  {
+		 _daoUserInfo=new DaoUserInfo(this);
+	  }
+	  return _daoUserInfo;
+   }
+   
+   DaoInitDataBase _daoInitDataBase;
+   DaoInitDataBase getDaoInitDataBase()
+   {
+	  if(_daoInitDataBase==null)
+	  {
+		 _daoInitDataBase=new DaoInitDataBase(this);
+	  }
+	  return _daoInitDataBase;
+   }
+   
    private final String CACHE_USERNAME = "UserName";
 
    int uId;
@@ -73,27 +91,28 @@ public class ActLogin extends Activity
 			// TODO Auto-generated method stub
 			try
 			{
-			   // 加载，初始化
-			   daoLogin = new DaoUserInfo(ActLogin.this);
-			   if (daoLogin.IsUserExist(edtUserName.getText().toString().trim()))
+			   //用户存在
+			   if (getDaoUserInfo().IsUserExist(edtUserName.getText().toString().trim()))
 			   {
 				  ModUserInfo modUserInfo = new ModUserInfo();
 				  modUserInfo.setUserName(edtUserName.getText().toString().trim());
 				  modUserInfo.setUserKey(edtUserKey.getText().toString().trim());
-				  if (daoLogin.IsUserKeyRight(modUserInfo))
+				  if (getDaoUserInfo().IsUserKeyRight(modUserInfo))
 				  {
-					 uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());
+					 uId = getDaoUserInfo().GetUserIdByUserName(modUserInfo.getUserName());
+					 
+					 getDialogs().setLoadingDialogDismiss();
 					 LoginSuccess();
 				  }
 				  else
 				  {
-					 getDialogs().setDialogDismiss();
+					 getDialogs().setLoadingDialogDismiss();
 					 LoginFailed();
 				  }
 			   }
-			   else
+			   else//用户不存在
 			   {
-				  getDialogs().setDialogDismiss();
+				  getDialogs().setLoadingDialogDismiss();
 				  Looper.prepare();
 				  getDialogs().ShowOKCancelAlertDialog("提示", "该用户名不存在，将创建一个新的用户，你确定吗？", new OnClickListener()
 				  {
@@ -102,18 +121,17 @@ public class ActLogin extends Activity
 					 {
 						// TODO Auto-generated method stub
 						dialog.dismiss();
-//						Looper.loop();
-//						Looper.prepare();
+						
 						getDialogs().ShowLoadingDialogNoTitle("请稍候。。。");
                         String nowTime=DateHelper.ToDateTime(new Date());
 						ModUserInfo modUserInfo = new ModUserInfo(edtUserName.getText().toString().trim(), edtUserKey.getText().toString().trim(), nowTime, nowTime, 0);
-						daoLogin.InsertUser(modUserInfo);
-						uId = daoLogin.GetUserIdByUserName(modUserInfo.getUserName());
+						getDaoUserInfo().InsertUser(modUserInfo);
+						uId = getDaoUserInfo().GetUserIdByUserName(modUserInfo.getUserName());
 						
 						//初始化数据库的数据
-						daoInitDataBase=new DaoInitDataBase(ActLogin.this);
-						daoInitDataBase.InitDataBase(uId);
-
+						getDaoInitDataBase().InitDataBase(uId);
+						
+						getDialogs().setLoadingDialogDismiss();
 						LoginSuccess();
 					 }
 				  });
@@ -133,8 +151,6 @@ public class ActLogin extends Activity
    // 登录成功
    void LoginSuccess()
    {
-	  // 进度条结束
-//	  dialogs.setDialogDismiss();
 	  // 将登陆加入全局变量
 	  Session session = (Session) getApplicationContext();
 	  session.setUserName(edtUserName.getText().toString().trim());
@@ -150,7 +166,6 @@ public class ActLogin extends Activity
    // 登录失败
    void LoginFailed()
    {
-
 	  Looper.prepare();
 	  getDialogs().ShowOKAlertDialog("提示", "登录失败，请确定密码正确");
 	  Looper.loop();
@@ -298,7 +313,7 @@ public class ActLogin extends Activity
    {
 	  if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
 	  { // 按下的如果是BACK，同时没有重复
-		 getDialogs().setDialogDismiss();
+//		 getDialogs().setDialogDismiss();
 		 FinishDialog();
 	  }
 	  return false;

@@ -150,6 +150,15 @@ public class ActMain extends Activity
 	  proACTMainBudget = (ProgressBar) findViewById(R.id.proBudget_Act_main);
       listView=(ListView)findViewById(R.id.listviewJournal_Act_main);
 	  scrollView=(ScrollView)findViewById(R.id.scrollView1);
+      scrollView.post(new Runnable()
+      {
+    	 @Override
+    	 public void run()
+    	 {
+    		// TODO Auto-generated method stub
+    		scrollView.fullScroll(View.FOCUS_UP); 
+    	 }
+      });
       
 	  // 顶部
 	  TextView txtACTMainView = (TextView) findViewById(R.id.txtDate_Act_main);
@@ -271,6 +280,9 @@ public class ActMain extends Activity
 			new int[]{R.id.img_listview_main,R.id.txtDate_listview_main,R.id.txtDate2_listview_main,
 			R.id.txtDateDetails_listview_main,R.id.txtIncoming_listview_main,R.id.txtPayout_listview_main});
 	  listView.setAdapter(sAdapter);
+	  
+	  txtInMoney.setText(String.valueOf(monthMoneyIn));
+	  txtOutMoney.setText(String.valueOf(monthMoneyOut));
    }
    
    //获取今天本周本月的钱数 
@@ -278,14 +290,12 @@ public class ActMain extends Activity
    {
 	  try
       {
-      	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
+      	  dayMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), new Date());
+      	  weekMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), week[0], week[1]);
       	  monthMoneyIn=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Incoming.getValue(), month[0], month[1]);
       	  dayMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), new Date());
       	  weekMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), week[0], week[1]);
       	  monthMoneyOut=getDaoInOutDetails().GetInOutAmount(getSession().getUserId(),Enums.InOrOut.Payout.getValue(), month[0], month[1]);
-      	  
-      	  txtInMoney.setText(String.valueOf(monthMoneyIn));
-      	  txtOutMoney.setText(String.valueOf(monthMoneyOut));
       }
       catch (Exception e)
       {
@@ -301,15 +311,16 @@ public class ActMain extends Activity
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.act_main);
 
-	  LoadExpenseMoney();
+
 
 	  InitControls();
 	  InitControlsListener();
-	  
+
 	  try
 	  {
-	    txtInMoney.setText(String.valueOf(monthMoneyIn));
-	    txtOutMoney.setText(String.valueOf(monthMoneyOut));
+		 LoadingAnimation();
+	     LoadExpenseMoney();	  
+	     LoadExpenseState();
 	  }
 	  catch (Exception e)
 	  {
@@ -317,17 +328,8 @@ public class ActMain extends Activity
 		 getDialogs().ShowOKAlertDialog("ERROR","onCreate-"+e.getMessage()+e.getStackTrace());
 	  }
 	  
-	  LoadingAnimation();
-	  LoadExpenseState();
-      scrollView.post(new Runnable()
-	  {
-	     @Override
-	     public void run()
-	     {
-	  	  // TODO Auto-generated method stub
-	  	   scrollView.fullScroll(View.FOCUS_UP); 
-	     }
-	  });
+
+
    }
 
    
@@ -338,8 +340,11 @@ public class ActMain extends Activity
       switch (requestCode)
 	  {
 		 case NEWRECORD://从增加页面返回时，更新数据
-			LoadExpenseMoney();
-			LoadExpenseState();
+			if(resultCode==RESULT_OK)
+			{
+			  LoadExpenseMoney();
+			  LoadExpenseState();
+			}
 			break;
 
 		 default:

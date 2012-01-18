@@ -240,6 +240,7 @@ public class ActNewRecording extends ActivityGroup
 		 public void onClick(View v)
 		 {
 			// TODO Auto-generated method stub
+			setResult(RESULT_CANCELED);
 			finish();
 		 }
 	  });
