@@ -191,7 +191,7 @@ public class Dialogs
 	  CreateLoadingDialog(loadingDialogTitle, message);
    }
 
-   public void setDialogDismiss()
+   public void setLoadingDialogDismiss()
    {
 	  if (mDialog.isShowing())
 	  {
