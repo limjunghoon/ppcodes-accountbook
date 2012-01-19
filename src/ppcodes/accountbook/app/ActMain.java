@@ -311,8 +311,6 @@ public class ActMain extends Activity
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.act_main);
 
-
-
 	  InitControls();
 	  InitControlsListener();
 
@@ -327,9 +325,6 @@ public class ActMain extends Activity
 		 // TODO: handle exception
 		 getDialogs().ShowOKAlertDialog("ERROR","onCreate-"+e.getMessage()+e.getStackTrace());
 	  }
-	  
-
-
    }
 
    
